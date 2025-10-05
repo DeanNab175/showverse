@@ -1,0 +1,14 @@
+### ShowVerse
+This is a portfolio showcasing verse for your work. Built using Next.js and Tailwind css.
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
