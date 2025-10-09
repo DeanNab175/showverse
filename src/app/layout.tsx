@@ -29,9 +29,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
               <NavbarComponent />
             </div>
             <div className="col-start-2 -col-end-1">
-              <section className="border border-gray-200 h-full">
-                {children}
-              </section>
+              <section className="h-full">{children}</section>
             </div>
           </div>
         </main>
