@@ -9,18 +9,18 @@ function NavbarComponent() {
   const pathname = usePathname();
 
   return (
-    <nav className="border border-gray-200 h-full">
-      <ul>
+    <nav className="main-nav border border-gray-200 h-full grid items-center">
+      <ul className="flex flex-col gap-4">
         {navbarLinks.map((link) => (
           <li key={link.id} className="text-center">
             <Link
               href={link.href}
               className={`link ${pathname === link.href ? "active" : ""}`}
             >
-              <span className="block w-6 h-6">
-                <i className={`icon ${link.iconClass}`}></i>
+              <span className="icon w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center">
+                <i className={`text-3xl ${link.iconClass}`}></i>
               </span>
-              <span>{link.name}</span>
+              <span className="text-sm">{link.name}</span>
             </Link>
           </li>
         ))}

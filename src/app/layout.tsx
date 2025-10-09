@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { M_PLUS_Rounded_1c } from "next/font/google";
 import "./globals.css";
-// import "../../public/icomoon/style.css";
 import NavbarComponent from "@/components/navbar-component/navbar-component";
 
 const mPlusRounded = M_PLUS_Rounded_1c({
@@ -16,11 +15,11 @@ export const metadata: Metadata = {
   description: "Showcasing verse for your work.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+interface RootLayoutProps {
   children: React.ReactNode;
-}>) {
+}
+
+export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="en">
       <body className={`${mPlusRounded.variable} antialiased`}>

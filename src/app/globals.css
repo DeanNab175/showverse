@@ -1,16 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800&display=swap");
-@import "../styles/icomoon-font-style.css";
 @import "tailwindcss";
+@import "../styles/icomoon-font-style.css";
+@import "../styles/navbar-links.css";
 
 :root {
   /* --background: #ffffff;
   --foreground: #171717; */
   --primary-font: "M PLUS Rounded 1c", sans-serif;
 
-  --clr-accent1: #C0EB6A;
+  --clr-accent1: #c0eb6a;
   --clr-accent2: #485550;
-  --clr-accent3: #F4F6F0;
-  --clr-accent4: #FFFFFF;
+  --clr-accent3: #f4f6f0;
+  --clr-accent4: #ffffff;
   --clr-dark: 157deg 8% 31%;
   --clr-white: 0deg 0% 100%;
 
@@ -34,6 +35,9 @@
   --color-foreground: var(--foreground); */
   --font-sans: var(--font-m-plus-rounded);
   /* --font-mono: var(--font-geist-mono); */
+
+  --color-primary: var(--clr-primary);
+  --color-secondary: var(--clr-secondary);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -44,7 +48,7 @@
 }
 
 body {
-  /* background: var(--background);
-  color: var(--foreground); */
+  /* background: var(--background);*/
+  color: var(--color-secondary);
   font-family: var(--primary-font);
 }
