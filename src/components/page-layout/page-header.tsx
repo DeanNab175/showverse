@@ -3,7 +3,7 @@ interface PageHeaderProps {
 }
 
 function PageHeader({ children }: PageHeaderProps) {
-  return <header>{children}</header>;
+  return <header className="row-span-1 row-start-1">{children}</header>;
 }
 
 export default PageHeader;
