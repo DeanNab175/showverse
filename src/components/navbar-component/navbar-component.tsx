@@ -17,8 +17,8 @@ function NavbarComponent() {
               href={link.href}
               className={`link ${pathname === link.href ? "active" : ""}`}
             >
-              <span className="icon w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center">
-                <i className={`text-3xl ${link.iconClass}`}></i>
+              <span className={`${link.iconFontSizeClass} icon w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center`}>
+                <i className={link.iconClass}></i>
               </span>
               <span className="text-sm">{link.name}</span>
             </Link>
