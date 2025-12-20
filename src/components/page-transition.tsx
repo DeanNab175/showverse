@@ -1,58 +1,138 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
+import { useCallback, useEffect, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import gsap from "gsap";
+import { useTransition } from "@/context/transition-context";
+import PageLayout from "./page-layout/page-layout";
 
 interface PageTransitionProps {
   children: React.ReactNode;
 }
-
 export default function PageTransition({ children }: PageTransitionProps) {
+  const router = useRouter();
   const pathname = usePathname();
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const firstMount = useRef(true);
+  const { getEntryAnimations, setEntryAnimations } = useTransition();
+  const overlayRef = useRef<HTMLDivElement | null>(null);
+  const isTransitioning = useRef(false);
+  const hasPlayedInitial = useRef(false);
+  const previousPathname = useRef<string | null>(null);
 
-  useGSAP(() => {
-    if (!wrapperRef.current) return;
+  const playEntryAnimation = useCallback(() => {
+    const entryAnimationFn = getEntryAnimations();
+    const isRouteChange = previousPathname.current !== null;
 
-    const wrapper = wrapperRef.current;
-    const ctx = gsap.context(() => {
-      if (firstMount.current) {
-        // initial enter animation
-        gsap.fromTo(
-          wrapper,
-          { autoAlpha: 0, scale: 0 },
-          { autoAlpha: 1, scale: 1, duration: 0.45, ease: "power3.out" }
-        );
-        firstMount.current = false;
-        return;
+    const entryTl = gsap.timeline({
+      onComplete: () => {
+        isTransitioning.current = false;
+        previousPathname.current = pathname;
+        // Clear animations after they're played
+        setEntryAnimations(null);
+      },
+    });
+
+    // Overlay reveal (always the same)
+    if (isRouteChange) {
+      entryTl
+        .set(overlayRef.current, {
+          translateY: "0%",
+          translateX: "100%",
+          scale: 0.5,
+          rotate: 45,
+        })
+        .to(overlayRef.current, {
+          translateY: "0%",
+          translateX: "0%",
+          scale: 1,
+          rotate: 0,
+          duration: 1.2,
+          ease: "power2.inOut",
+        });
+    }
+
+    // Global page-content opacity (always happens)
+    entryTl.to(".page-content", {
+      opacity: 1,
+      duration: 0.5,
+      ease: "power2.inOut",
+    });
+
+    if (entryAnimationFn) {
+      if (entryAnimationFn.length > 0) {
+        const pageTl = gsap.timeline();
+
+        const timelineFn = entryAnimationFn as (tl: gsap.core.Timeline) => void;
+        timelineFn(pageTl);
+        entryTl.add(pageTl, "<");
+      } else {
+        const freeFn = entryAnimationFn as () => void;
+        entryTl.call(() => freeFn(), [], "<");
       }
+    }
 
-      // on subsequent pathname changes: quick out -> in sequence
-      const tl = gsap.timeline();
-      tl.to(wrapper, {
-        autoAlpha: 0,
-        x: "100%",
-        duration: 0.3,
-        ease: "power1.in",
+    entryTl.play();
+  }, [getEntryAnimations, pathname, setEntryAnimations]);
+
+  const exitPage = useCallback(
+    (url: string) => {
+      const exitTl = gsap.timeline({
+        onComplete: () => {
+          router.push(url);
+        },
       });
-      tl.fromTo(
-        wrapper,
-        { autoAlpha: 0, x: "100%" },
-        { autoAlpha: 1, x: 0, duration: 0.36, ease: "power3.out" },
-        // start the in-animation immediately after the out animation
-        ">-0"
+
+      exitTl.to(".page-content", {
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      });
+
+      exitTl.to(
+        overlayRef.current,
+        {
+          translateY: "-200%",
+          scale: 0.5,
+          rotate: 45,
+          duration: 1,
+          ease: "power2.inOut",
+        },
+        "-=0.3"
       );
-    }, wrapper);
 
-    return () => ctx.revert();
-  }, [pathname]);
-
-  return (
-    <div ref={wrapperRef} className="w-full h-full">
-      {children}
-    </div>
+      exitTl.play();
+    },
+    [router]
   );
+
+  useEffect(() => {
+    console.log({ hasPlayedInitial, isTransitioning });
+    if (hasPlayedInitial.current && !isTransitioning.current) return;
+
+    playEntryAnimation();
+    hasPlayedInitial.current = true;
+  }, [pathname, playEntryAnimation]);
+
+  useEffect(() => {
+    const handleClick = (e: Event) => {
+      e.preventDefault();
+      const href = (e.currentTarget as HTMLAnchorElement).getAttribute("href");
+      if (href) {
+        const url = new URL(href, window.location.origin).pathname;
+        if (url !== pathname && !isTransitioning.current) {
+          isTransitioning.current = true;
+          hasPlayedInitial.current = false;
+          exitPage(url);
+        }
+      }
+    };
+
+    const links = document.querySelectorAll(".menu-nav-link"); //a[href^='/']
+    links.forEach((link) => link.addEventListener("click", handleClick));
+
+    return () => {
+      links.forEach((link) => link.removeEventListener("click", handleClick));
+    };
+  }, [pathname, exitPage]);
+
+  return <PageLayout ref={overlayRef}>{children}</PageLayout>;
 }

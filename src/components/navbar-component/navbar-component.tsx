@@ -15,9 +15,13 @@ function NavbarComponent() {
           <li key={link.id} className="text-center">
             <Link
               href={link.href}
-              className={`link ${pathname === link.href ? "active" : ""}`}
+              className={`menu-nav-link link ${
+                pathname === link.href ? "active" : ""
+              }`}
             >
-              <span className={`${link.iconFontSizeClass} icon w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center`}>
+              <span
+                className={`${link.iconFontSizeClass} icon w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center`}
+              >
                 <i className={link.iconClass}></i>
               </span>
               <span className="text-sm">{link.name}</span>
