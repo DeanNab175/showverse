@@ -23,7 +23,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="en">
       <body className={`${mPlusRounded.variable} antialiased`}>
-        <main className="container mx-auto">
+        <main className="container mx-auto overflow-hidden">
           <div className="grid lg:grid-cols-9 xl:grid-cols-12 gap-4 h-full min-h-screen py-16">
             <div className="col-start-1 col-end-2">
               <NavbarComponent />
