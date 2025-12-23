@@ -3,7 +3,7 @@ import socialMediaLinks from "@/constants/social-media-links";
 
 function FooterSocials() {
   return (
-    <p className="footer-social">
+    <p className="footer-social grid grid-flow-col auto-cols-max">
       {socialMediaLinks.map((link) => (
         <Link
           key={link.id}

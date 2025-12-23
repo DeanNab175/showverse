@@ -10,7 +10,7 @@ function NavbarComponent() {
 
   return (
     <nav className="main-nav h-full grid items-center">
-      <ul className="flex flex-col gap-7">
+      <ul className="flex flex-row lg:flex-col gap-7">
         {navbarLinks.map((link) => (
           <li key={link.id} className="text-center">
             <Link

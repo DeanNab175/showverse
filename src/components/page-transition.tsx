@@ -36,14 +36,12 @@ export default function PageTransition({ children }: PageTransitionProps) {
     if (isRouteChange) {
       entryTl
         .set(overlayRef.current, {
-          backgroundColor: "#c0eb6a",
           translateY: "0%",
           translateX: "100%",
           scale: 0.6,
           rotate: -45,
         })
         .to(overlayRef.current, {
-          backgroundColor: "#ffffff",
           translateY: "0%",
           translateX: "0%",
           scale: 1,
@@ -122,7 +120,6 @@ export default function PageTransition({ children }: PageTransitionProps) {
       exitTl.to(
         overlayRef.current,
         {
-          backgroundColor: "#c0eb6a",
           translateY: "-200%",
           scale: 0.6,
           rotate: -45,
