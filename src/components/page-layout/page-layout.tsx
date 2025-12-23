@@ -9,7 +9,7 @@ const PageLayout = forwardRef<HTMLElement, PageLayoutProps>(
     return (
       <article
         ref={ref}
-        className="border border-gray-200 h-full rounded-[104px] px-16 py-14 grid grid-flow-col grid-rows-9"
+        className="shadow-[2px_20px_30px_rgba(0,0,0,0.15)] h-full rounded-[104px] px-16 py-14 grid grid-flow-col grid-rows-9"
       >
         {children}
       </article>

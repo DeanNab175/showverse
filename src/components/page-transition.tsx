@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
+
 import { useTransition } from "@/context/transition-context";
 import PageLayout from "./page-layout/page-layout";
 
@@ -39,7 +40,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
           translateY: "0%",
           translateX: "100%",
           scale: 0.6,
-          rotate: 45,
+          rotate: -45,
         })
         .to(overlayRef.current, {
           backgroundColor: "#ffffff",
@@ -124,7 +125,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
           backgroundColor: "#c0eb6a",
           translateY: "-200%",
           scale: 0.6,
-          rotate: 45,
+          rotate: -45,
           duration: 1,
           ease: "power2.inOut",
         },

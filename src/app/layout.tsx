@@ -1,6 +1,8 @@
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { M_PLUS_Rounded_1c } from "next/font/google";
-import "./globals.css";
+
 import NavbarComponent from "@/components/navbar-component/navbar-component";
 
 const mPlusRounded = M_PLUS_Rounded_1c({
@@ -22,8 +24,8 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="en">
-      <body className={`${mPlusRounded.variable} antialiased`}>
-        <main className="container mx-auto overflow-hidden">
+      <body className={`${mPlusRounded.variable} antialiased overflow-hidden`}>
+        <main className="container mx-auto">
           <div className="grid lg:grid-cols-9 xl:grid-cols-12 gap-4 h-full min-h-screen py-16">
             <div className="col-start-1 col-end-2">
               <NavbarComponent />

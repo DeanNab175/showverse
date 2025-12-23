@@ -9,8 +9,8 @@ function NavbarComponent() {
   const pathname = usePathname();
 
   return (
-    <nav className="main-nav border border-gray-200 h-full grid items-center">
-      <ul className="flex flex-col gap-4">
+    <nav className="main-nav h-full grid items-center">
+      <ul className="flex flex-col gap-7">
         {navbarLinks.map((link) => (
           <li key={link.id} className="text-center">
             <Link
