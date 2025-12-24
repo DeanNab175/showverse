@@ -17,13 +17,13 @@ function PageHeaderComponent() {
           variant="ghost"
           className="flex items-center justify-center"
         >
-          <i className="text-xl icon-moon"></i>
+          <i className="icon-moon"></i>
         </Button>
         <Button asChild>
           <Link href="/contact" className="menu-nav-link">
             Contact me
-            <span className="text-sm">
-              <i className="icon-send font-bold"></i>
+            <span className="text-base">
+              <i className="icon-send"></i>
             </span>
           </Link>
         </Button>

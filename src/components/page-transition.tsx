@@ -58,12 +58,16 @@ export default function PageTransition({ children }: PageTransitionProps) {
       ease: "power2.inOut",
     });
 
-    entryTl.to(".page-footer", {
-      opacity: 1,
-      translateY: 0,
-      duration: 0.3,
-      ease: "power2.inOut",
-    });
+    entryTl.to(
+      ".page-footer",
+      {
+        opacity: 1,
+        translateY: 0,
+        duration: 0.3,
+        ease: "power2.inOut",
+      },
+      "<"
+    );
 
     // Global page-content opacity (always happens)
     entryTl.to(".page-content", {
@@ -103,12 +107,16 @@ export default function PageTransition({ children }: PageTransitionProps) {
         ease: "power2.inOut",
       });
 
-      exitTl.to(".page-footer", {
-        opacity: 0,
-        translateY: "20%",
-        duration: 0.3,
-        ease: "power2.inOut",
-      });
+      exitTl.to(
+        ".page-footer",
+        {
+          opacity: 0,
+          translateY: "20%",
+          duration: 0.3,
+          ease: "power2.inOut",
+        },
+        "<"
+      );
 
       exitTl.to(".page-content", {
         opacity: 0,
