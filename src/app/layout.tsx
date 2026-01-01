@@ -24,14 +24,16 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="en">
-      <body className={`${mPlusRounded.variable} antialiased overflow-hidden`}>
+      <body
+        className={`${mPlusRounded.variable} antialiased overflow-x-hidden`}
+      >
         <div className="main-content-shape bg-accent-3 fixed w-full h-full -z-[1]"></div>
-        <main className="container mx-auto">
+        <main className="container mx-auto px-3">
           <div className="grid lg:grid-cols-9 xl:grid-cols-12 gap-4 h-full min-h-screen py-16">
-            <div className="col-start-1 col-end-2">
+            <div className="lg:col-start-1 lg:col-end-2">
               <NavbarComponent />
             </div>
-            <div className="col-start-2 -col-end-1">
+            <div className="row-start-1 lg:col-start-2 lg:-col-end-1">
               <section className="h-full">{children}</section>
             </div>
           </div>
