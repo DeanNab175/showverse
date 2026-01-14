@@ -73,7 +73,7 @@ function NavbarComponent() {
           <li key={link.id} className="text-center">
             <Link
               href={link.href}
-              className={`menu-nav-link link ${
+              className={`menu-nav-link link hover:text-lime-700 ${
                 pathname === link.href ? "active" : ""
               }`}
             >

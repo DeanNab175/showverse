@@ -3,9 +3,7 @@ interface PageContentProps {
 }
 
 function PageContent({ children }: PageContentProps) {
-  return (
-    <main className="row-start-2 -row-end-2 page-content">{children}</main>
-  );
+  return <main className="page-content">{children}</main>;
 }
 
 export default PageContent;

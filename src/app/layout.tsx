@@ -28,8 +28,8 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
         className={`${mPlusRounded.variable} antialiased overflow-x-hidden`}
       >
         <div className="main-content-shape bg-accent-3 fixed w-full h-full -z-[1]"></div>
-        <main className="container mx-auto px-3">
-          <div className="grid lg:grid-cols-9 xl:grid-cols-12 gap-4 h-full min-h-screen py-16">
+        <main className="container mx-auto px-3 flex items-center min-h-screen">
+          <div className="grid gap-4 w-full h-[85vh] grid-rows-[1fr_auto] lg:grid-rows-none lg:grid-cols-9 xl:grid-cols-12 lg:max-h-[60rem] xl:max-h-[63rem]">
             <div className="lg:col-start-1 lg:col-end-2">
               <NavbarComponent />
             </div>
