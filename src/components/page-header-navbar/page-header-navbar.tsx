@@ -1,9 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useTheme } from "@/contexts/theme-context";
 import { Button } from "@/components/ui/button";
 
-function PageHeaderComponent() {
+function PageHeaderNavbar() {
+  console.log("PageHeaderNavbar rendering, about to call useTheme");
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <section className="flex justify-between items-center pb-4">
       <div className="logo">
@@ -16,8 +20,14 @@ function PageHeaderComponent() {
           size="icon"
           variant="ghost"
           className="flex items-center justify-center"
+          onClick={toggleTheme}
+          aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
         >
-          <i className="icon-moon"></i>
+          {theme === "light" ? (
+            <i className="icon-moon"></i>
+          ) : (
+            <i className="icon-sun"></i>
+          )}
         </Button>
         <Button asChild>
           <Link href="/contact" className="menu-nav-link">
@@ -32,4 +42,4 @@ function PageHeaderComponent() {
   );
 }
 
-export default PageHeaderComponent;
+export default PageHeaderNavbar;

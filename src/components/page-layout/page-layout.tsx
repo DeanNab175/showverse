@@ -9,12 +9,12 @@ const PageLayout = forwardRef<HTMLElement, PageLayoutProps>(
     return (
       <article
         ref={ref}
-        className="shadow-[2px_20px_30px_rgba(0,0,0,0.15)] bg-accent-4/60 h-full rounded-[104px] px-16 py-14 grid grid-rows-[auto_1fr_auto]"
+        className="shadow-[2px_20px_30px_rgba(0,0,0,0.15)] bg-page-bg/60 h-full rounded-[104px] px-16 py-14 grid grid-rows-[auto_1fr_auto]"
       >
         {children}
       </article>
     );
-  }
+  },
 );
 
 PageLayout.displayName = "PageLayout";

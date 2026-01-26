@@ -46,7 +46,7 @@ function NavbarComponent() {
             opacity: 1,
             duration: 0.6,
             ease: "bounce.out",
-          }
+          },
         );
         hasInitialized.current = true;
       } else {
@@ -58,7 +58,7 @@ function NavbarComponent() {
         });
       }
     },
-    { dependencies: [pathname, isMobile, isTablet, isDesktop] }
+    { dependencies: [pathname, isMobile, isTablet, isDesktop] },
   );
 
   return (
@@ -78,11 +78,11 @@ function NavbarComponent() {
               }`}
             >
               <span
-                className={`${link.iconFontSizeClass} icon w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center`}
+                className={`${link.iconFontSizeClass} icon text-base-text w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center`}
               >
                 <i className={link.iconClass}></i>
               </span>
-              <span className="text-sm">{link.name}</span>
+              <span className="text-sm text-base-text">{link.name}</span>
             </Link>
           </li>
         ))}
