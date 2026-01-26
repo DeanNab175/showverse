@@ -5,7 +5,6 @@ import { useTheme } from "@/contexts/theme-context";
 import { Button } from "@/components/ui/button";
 
 function PageHeaderNavbar() {
-  console.log("PageHeaderNavbar rendering, about to call useTheme");
   const { theme, toggleTheme } = useTheme();
 
   return (
