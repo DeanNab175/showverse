@@ -24,7 +24,9 @@ function NavbarComponent() {
 
   useGSAP(
     () => {
-      const activeLink = document.querySelector(".menu-nav-link.active .icon");
+      const activeLink = document.querySelector(
+        ".menu-nav-link.active .menu-nav-icon"
+      );
       const indicator = navIndicatorRef.current;
 
       if (!activeLink || !indicator) return;
@@ -46,7 +48,7 @@ function NavbarComponent() {
             opacity: 1,
             duration: 0.6,
             ease: "bounce.out",
-          },
+          }
         );
         hasInitialized.current = true;
       } else {
@@ -58,7 +60,7 @@ function NavbarComponent() {
         });
       }
     },
-    { dependencies: [pathname, isMobile, isTablet, isDesktop] },
+    { dependencies: [pathname, isMobile, isTablet, isDesktop] }
   );
 
   return (
@@ -69,23 +71,27 @@ function NavbarComponent() {
       ></div>
 
       <ul className="flex flex-row lg:flex-col gap-7">
-        {navbarLinks.map((link) => (
-          <li key={link.id} className="text-center">
-            <Link
-              href={link.href}
-              className={`menu-nav-link link hover:text-lime-700 ${
-                pathname === link.href ? "active" : ""
-              }`}
-            >
-              <span
-                className={`${link.iconFontSizeClass} icon text-base-text w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center`}
+        {navbarLinks.map((link) => {
+          const isActiveLink = pathname === link.href;
+
+          return (
+            <li key={link.id} className="text-center">
+              <Link
+                href={link.href}
+                className={`menu-nav-link link ${isActiveLink ? "active" : ""}`}
               >
-                <i className={link.iconClass}></i>
-              </span>
-              <span className="text-sm text-base-text">{link.name}</span>
-            </Link>
-          </li>
-        ))}
+                <span
+                  className={`${link.iconFontSizeClass} ${isActiveLink ? "text-button-txt" : ""} menu-nav-icon text-body-txt w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center`}
+                >
+                  <i className={link.iconClass}></i>
+                </span>
+                <span className="menu-nav-text text-sm text-body-txt">
+                  {link.name}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

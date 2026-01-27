@@ -8,7 +8,7 @@ function FooterSocials() {
         <Link
           key={link.id}
           href={link.href}
-          className={`text-sm mr-4 text-base-text ${link.hoverColorClass}`}
+          className={`text-sm mr-4 text-body-txt ${link.hoverColorClass}`}
         >
           <i className={link.iconClass}></i>
         </Link>

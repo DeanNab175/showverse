@@ -12,6 +12,7 @@ const ANIMATION_CONFIG = {
     content: 0.5,
     overlay: 1.2,
     overlayExit: 1,
+    clipPath: 1.2,
   },
   ease: {
     header: "power2.inOut",
@@ -19,6 +20,7 @@ const ANIMATION_CONFIG = {
     content: "power2.inOut",
     overlay: "power2.inOut",
     overlayExit: "power2.inOut",
+    clipPath: "power2.inOut",
   },
 } as const;
 
@@ -26,6 +28,12 @@ const PAGE_ELEMENT_SELECTOR = {
   header: ".page-header",
   footer: ".page-footer",
   content: ".page-content",
+  shape: ".main-content-shape",
+} as const;
+
+const CLIP_PATH = {
+  square: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+  custom: "polygon(0 0, 38% 0, 75% 100%, 0% 100%)",
 } as const;
 
 export function createExitTimeline(
@@ -56,6 +64,11 @@ export function createExitTimeline(
       delay: 0.5,
       ease: ANIMATION_CONFIG.ease.content,
     })
+    .to(PAGE_ELEMENT_SELECTOR.shape, {
+      clipPath: CLIP_PATH.square,
+      duration: ANIMATION_CONFIG.duration.clipPath,
+      ease: ANIMATION_CONFIG.ease.clipPath,
+    })
     .to(
       overlayRef.current,
       {
@@ -65,7 +78,7 @@ export function createExitTimeline(
         duration: ANIMATION_CONFIG.duration.overlayExit,
         ease: ANIMATION_CONFIG.ease.overlayExit,
       },
-      "-=0.3"
+      "-=0.1"
     );
 }
 
@@ -76,6 +89,11 @@ export function createEntryTimeline(
   onComplete: () => void
 ) {
   const entryTl = gsap.timeline({ onComplete });
+
+  // Set initial clip-path to square
+  entryTl.set(PAGE_ELEMENT_SELECTOR.shape, {
+    clipPath: CLIP_PATH.square,
+  });
 
   // Overlay reveal for route changes
   if (isRouteChange) {
@@ -93,7 +111,23 @@ export function createEntryTimeline(
         rotate: 0,
         duration: ANIMATION_CONFIG.duration.overlay,
         ease: ANIMATION_CONFIG.ease.overlay,
-      });
+      })
+      .to(
+        PAGE_ELEMENT_SELECTOR.shape,
+        {
+          clipPath: CLIP_PATH.custom,
+          duration: ANIMATION_CONFIG.duration.clipPath,
+          ease: ANIMATION_CONFIG.ease.clipPath,
+        },
+        "-=0.1"
+      );
+  } else {
+    // If not a route change, animate to custom shape immediately
+    entryTl.to(PAGE_ELEMENT_SELECTOR.shape, {
+      clipPath: CLIP_PATH.custom,
+      duration: ANIMATION_CONFIG.duration.clipPath,
+      ease: ANIMATION_CONFIG.ease.clipPath,
+    });
   }
 
   entryTl

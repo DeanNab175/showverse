@@ -52,9 +52,10 @@
 }
 
 .light {
-  --clr-base-text: var(--clr-accent-2);
+  --clr-body-txt: var(--clr-accent-2);
   --clr-page-bg: var(--clr-white);
-  --clr-main-content-shape-bg: var(--clr-accent-3);
+  --clr-surface-bg: var(--clr-accent-3);
+  --clr-button-txt: var(--clr-dark);
 
   /* ShadCN color variables */
   --background: var(--clr-white);
@@ -91,9 +92,10 @@
 }
 
 .dark {
-  --clr-base-text: var(--clr-white);
+  --clr-body-txt: var(--clr-white);
   --clr-page-bg: var(--clr-dark-2);
-  --clr-main-content-shape-bg: var(--clr-dark);
+  --clr-surface-bg: var(--clr-dark);
+  --clr-button-txt: var(--clr-dark);
 
   /* ShadCN color variables */
   --background: var(--clr-dark-2);
@@ -144,9 +146,10 @@
   --color-linkedin: var(--clr-linkedin);
   --color-youtube: var(--clr-youtube);
   --color-github: var(--clr-github);
-  --color-base-text: var(--clr-base-text);
+  --color-body-txt: var(--clr-body-txt);
   --color-page-bg: var(--clr-page-bg);
-  --color-main-content-shape-bg: var(--clr-main-content-shape-bg);
+  --color-surface-bg: var(--clr-surface-bg);
+  --color-button-txt: var(--clr-button-txt);
 
   /* ShadCN color variables */
   --color-sidebar-ring: var(--sidebar-ring);
@@ -191,11 +194,11 @@
   }
 
   body {
-    @apply bg-background text-base-text font-sans;
+    @apply bg-background text-body-txt font-sans;
     /*font-family: var(--primary-font);*/
   }
 }
 
 .main-content-shape {
-  clip-path: polygon(0 0, 38% 0, 75% 100%, 0% 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
 }
