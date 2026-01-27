@@ -7,12 +7,12 @@ import {
 
 const ANIMATION_CONFIG = {
   duration: {
-    header: 0.3,
-    footer: 0.3,
-    content: 0.5,
-    overlay: 1.2,
-    overlayExit: 1,
-    clipPath: 1.2,
+    header: 0.2,
+    footer: 0.2,
+    content: 0.3,
+    overlay: 0.5,
+    overlayExit: 0.3,
+    clipPath: 0.3,
   },
   ease: {
     header: "power2.inOut",
@@ -73,7 +73,7 @@ export function createExitTimeline(
       overlayRef.current,
       {
         translateY: "-200%",
-        scale: 0.6,
+        scale: 0,
         rotate: -45,
         duration: ANIMATION_CONFIG.duration.overlayExit,
         ease: ANIMATION_CONFIG.ease.overlayExit,
@@ -101,7 +101,7 @@ export function createEntryTimeline(
       .set(overlayRef.current, {
         translateY: "0%",
         translateX: "100%",
-        scale: 0.6,
+        scale: 0,
         rotate: -45,
       })
       .to(overlayRef.current, {
