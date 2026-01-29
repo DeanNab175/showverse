@@ -14,7 +14,7 @@ const PageLayout = forwardRef<HTMLElement, PageLayoutProps>(
         {children}
       </article>
     );
-  },
+  }
 );
 
 PageLayout.displayName = "PageLayout";

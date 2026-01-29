@@ -50,7 +50,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
               <div className="lg:col-start-1 lg:col-end-2">
                 <NavbarComponent />
               </div>
-              <div className="row-start-1 lg:col-start-2 lg:-col-end-1">
+              <div className="row-start-1 lg:col-start-2 lg:-col-end-1 h-[inherit]">
                 <section className="h-full">{children}</section>
               </div>
             </div>

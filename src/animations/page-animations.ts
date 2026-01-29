@@ -61,7 +61,6 @@ export function createExitTimeline(
     .to(PAGE_ELEMENT_SELECTOR.content, {
       opacity: 0,
       duration: ANIMATION_CONFIG.duration.content,
-      delay: 0.5,
       ease: ANIMATION_CONFIG.ease.content,
     })
     .to(PAGE_ELEMENT_SELECTOR.shape, {
@@ -78,7 +77,7 @@ export function createExitTimeline(
         duration: ANIMATION_CONFIG.duration.overlayExit,
         ease: ANIMATION_CONFIG.ease.overlayExit,
       },
-      "-=0.1"
+      "+=0.1"
     );
 }
 
@@ -112,15 +111,11 @@ export function createEntryTimeline(
         duration: ANIMATION_CONFIG.duration.overlay,
         ease: ANIMATION_CONFIG.ease.overlay,
       })
-      .to(
-        PAGE_ELEMENT_SELECTOR.shape,
-        {
-          clipPath: CLIP_PATH.custom,
-          duration: ANIMATION_CONFIG.duration.clipPath,
-          ease: ANIMATION_CONFIG.ease.clipPath,
-        },
-        "-=0.1"
-      );
+      .to(PAGE_ELEMENT_SELECTOR.shape, {
+        clipPath: CLIP_PATH.custom,
+        duration: ANIMATION_CONFIG.duration.clipPath,
+        ease: ANIMATION_CONFIG.ease.clipPath,
+      });
   } else {
     // If not a route change, animate to custom shape immediately
     entryTl.to(PAGE_ELEMENT_SELECTOR.shape, {

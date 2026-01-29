@@ -11,7 +11,9 @@ function PageHeaderNavbar() {
     <section className="flex justify-between items-center pb-4">
       <div className="logo">
         <h1 className="text-lg">
-          Show<span className="text-primary font-bold">Verse</span>
+          <Link href="/" className="menu-nav-link text-body-txt">
+            Show<span className="text-primary font-bold">Verse</span>
+          </Link>
         </h1>
       </div>
       <div className="flex gap-4 items-center">

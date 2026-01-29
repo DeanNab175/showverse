@@ -3,7 +3,7 @@ interface PageFooterProps {
 }
 
 function PageFooter({ children }: PageFooterProps) {
-  return <footer className="page-footer content-end">{children}</footer>;
+  return <footer className="page-footer content-end pt-4">{children}</footer>;
 }
 
 export default PageFooter;
