@@ -9,6 +9,8 @@ import { Button } from "../ui/button";
 import HomeIllustration from "../illustrations/home-illustration";
 import { useTransition } from "@/contexts/transition-context";
 
+gsap.registerPlugin(useGSAP);
+
 function HomeContent() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const imageRef = useRef<HTMLElement | null>(null);
@@ -90,7 +92,7 @@ function HomeContent() {
           </div>
         </article>
         <article ref={imageRef} className="image">
-          <HomeIllustration className="w-full h-auto" />
+          <HomeIllustration className="w-[95%] h-auto" />
         </article>
       </section>
     </div>

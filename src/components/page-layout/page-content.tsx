@@ -4,7 +4,9 @@ interface PageContentProps {
 
 function PageContent({ children }: PageContentProps) {
   return (
-    <main className="page-content overflow-y-auto min-h-0">{children}</main>
+    <main className="page-content overflow-y-auto overflow-x-hidden min-h-0">
+      {children}
+    </main>
   );
 }
 
