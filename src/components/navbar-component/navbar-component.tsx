@@ -81,7 +81,7 @@ function NavbarComponent() {
                 className={`menu-nav-link link ${isActiveLink ? "active" : ""}`}
               >
                 <span
-                  className={`${link.iconFontSizeClass} ${isActiveLink ? "text-button-txt" : ""} menu-nav-icon text-body-txt w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center`}
+                  className={`${link.iconFontSizeClass} ${isActiveLink ? "text-navbar-link-icon-active" : ""} menu-nav-icon text-body-txt w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center`}
                 >
                   <i className={link.iconClass}></i>
                 </span>

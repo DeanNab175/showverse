@@ -20,8 +20,8 @@
   --clr-youtube: #FF0000;
   --clr-github: #24292e;
   */
-  /* --clr-accent-1: oklch(0.8834 0.1636 125.02); */
-  --clr-accent-1: oklch(65.693% 0.13816 253.084);
+  --clr-accent-1: oklch(0.8834 0.1636 125.02);
+  /* --clr-accent-1: oklch(65.693% 0.13816 253.084); */
   --clr-accent-2: oklch(0.4366 0.0183 170.25);
   --clr-accent-3: oklch(0.97 0.0082 121.63);
 
@@ -75,6 +75,8 @@
   --clr-button-secondary-txt: var(--clr-white);
 
   --clr-shadow-page: rgba(0, 0, 0, 0.15);
+  --clr-navbar-link-hover: var(--clr-accent-1-dark);
+  --clr-navbar-link-icon-active: var(--clr-dark);
 
   /* ShadCN color variables */
   --background: var(--clr-white);
@@ -119,6 +121,8 @@
   --clr-button-secondary-txt: var(--clr-white);
 
   --clr-shadow-page: rgba(57, 67, 64, 0.15);
+  --clr-navbar-link-hover: var(--clr-accent-1-dark);
+  --clr-navbar-link-icon-active: var(--clr-dark);
 
   /* ShadCN color variables */
   --background: var(--clr-dark-2);
@@ -175,6 +179,8 @@
   --color-button-txt: var(--clr-button-txt);
   --color-button-primary-txt: var(--clr-button-primary-txt);
   --color-button-secondary-txt: var(--clr-button-secondary-txt);
+  --color-navbar-link-hover: var(--clr-navbar-link-hover);
+  --color-navbar-link-icon-active: var(--clr-navbar-link-icon-active);
 
   /* ShadCN color variables */
   --color-sidebar-ring: var(--sidebar-ring);

@@ -1,7 +1,7 @@
 .menu-nav-link:not(.active):hover .menu-nav-icon {
-  @apply text-lime-600;
+  color: var(--clr-navbar-link-hover);
 }
 
 .menu-nav-link:hover .menu-nav-text {
-  @apply text-lime-600;
+  color: var(--clr-navbar-link-hover);
 }
