@@ -49,11 +49,11 @@ function HomeContent() {
             imageRef.current,
             {
               opacity: 0,
-              xPercent: 10,
+              xPercent: 100,
               duration: 0.5,
-              ease: "power2.out",
+              ease: "circ.out",
             },
-            "+=0.1"
+            "<"
           );
         }
       });
@@ -92,7 +92,7 @@ function HomeContent() {
           </div>
         </article>
         <article ref={imageRef} className="image">
-          <HomeIllustration className="w-[95%] h-auto" />
+          <HomeIllustration className="w-[95%] ml-auto h-auto" />
         </article>
       </section>
     </div>
