@@ -8,6 +8,7 @@ import { useGSAP } from "@gsap/react";
 import { Button } from "../ui/button";
 import HomeIllustration from "../illustrations/home-illustration";
 import { useTransition } from "@/contexts/transition-context";
+import homeData from "@/constants/data/home";
 
 gsap.registerPlugin(useGSAP);
 
@@ -63,38 +64,39 @@ function HomeContent() {
 
   return (
     <div className="h-full flex flex-col justify-center">
-      <section
-        ref={sectionRef}
-        className="grid grid-cols-[minmax(0,9fr)_minmax(0,11fr)] gap-4 items-center"
-      >
-        <article className="content">
-          <div className="max-w-9/12">
-            <h6 className="home-text text-xs">Hello I'm</h6>
-            <h1 className="home-text text-4xl -ml-0.5 mb-4 text-primary">
-              Donald Smith
-            </h1>
-            <h2 className="home-text text-base mb-1.5">
-              Freelance Web & UI/
-              <br />
-              UX Designer
-            </h2>
-            <p className="home-text text-xs mb-7">
-              Who builds digital experiences that work beautifully and feel
-              effortless.
-            </p>
-            <div className="button-link">
-              <Button variant="secondary" asChild>
-                <Link href="/portfolio" className="menu-nav-link">
-                  View Portfolio
-                </Link>
-              </Button>
+      {homeData.map(({ name, content }) => (
+        <section
+          key={name}
+          ref={sectionRef}
+          id={`section-${name}`}
+          className="grid grid-cols-[minmax(0,9fr)_minmax(0,11fr)] gap-4 items-center"
+        >
+          <article className="content">
+            <div className="max-w-9/12">
+              <h6 className="home-text text-xs">{content.greetMessage}</h6>
+              <h1 className="home-text text-4xl -ml-0.5 mb-4 text-primary">
+                {content.name}
+              </h1>
+              <h2 className="home-text text-base mb-1.5">{content.jobTitle}</h2>
+              <p className="home-text text-xs mb-7">
+                {content.shortDescription}
+              </p>
+              <div className="button-link">
+                {content.viewPage.map((p) => (
+                  <Button key={p.url} variant="secondary" asChild>
+                    <Link href={p.url} className="menu-nav-link">
+                      {p.text}
+                    </Link>
+                  </Button>
+                ))}
+              </div>
             </div>
-          </div>
-        </article>
-        <article ref={imageRef} className="image">
-          <HomeIllustration className="w-[95%] ml-auto h-auto" />
-        </article>
-      </section>
+          </article>
+          <article ref={imageRef} className="image">
+            <HomeIllustration className="w-[95%] ml-auto h-auto" />
+          </article>
+        </section>
+      ))}
     </div>
   );
 }

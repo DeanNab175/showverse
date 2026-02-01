@@ -20,14 +20,19 @@
   --clr-youtube: #FF0000;
   --clr-github: #24292e;
   */
+  /* --clr-accent-1: #2196f3; */
+  /* --clr-accent-1: #ffeb3b; */
+  /* --clr-accent-1: #ff5722; */
+  /* --clr-accent-1: #607d8b; */
   --clr-accent-1: oklch(0.8834 0.1636 125.02);
-  /* --clr-accent-1: oklch(65.693% 0.13816 253.084); */
   --clr-accent-2: oklch(0.4366 0.0183 170.25);
   --clr-accent-3: oklch(0.97 0.0082 121.63);
 
   --clr-white: oklch(1 0 0);
+  --clr-black: oklch(0 0 0);
   --clr-dark: oklch(0.2743 0.0093 173.57);
   --clr-dark-2: oklch(0.1965 0.0051 173.82);
+  --clr-body: var(--clr-accent-2);
 
   /* Social Medias colors */
   --clr-facebook: oklch(0.5891 0.2029 257.86);
@@ -51,23 +56,25 @@
 
   --radius: 0.625rem;
 
-  /* Home illustration theme tokens */
-  --home-illustration-accent-1: var(--clr-accent-1);
-  --home-illustration-accent-2: var(--clr-accent-2);
-  --home-illustration-accent-1-dark: var(--clr-accent-1-dark);
-  --home-illustration-dark: var(--clr-dark);
-  --home-illustration-dark-2: var(--clr-dark-2);
+  /* Illustration colors */
+  --illustration-accent-1: var(--clr-accent-1);
+  --illustration-accent-2: var(--clr-accent-2); /* #263238 */
+  --illustration-dark: var(--clr-dark);
+  --illustration-dark-2: var(--clr-dark-2);
+  --illustration-stroke: var(--clr-dark);
+  --illustration-black: var(--clr-black);
+  --illustration-white: var(--clr-white);
+
+  /* Home illustration colors */
   --home-illustration-skin: #edced9;
   --home-illustration-paper: #f7f7f7;
   --home-illustration-gray: #afafaf;
   --home-illustration-gray-2: #919191;
   --home-illustration-ink: #232323;
-  --home-illustration-black: #000000;
-  --home-illustration-white: #ffffff;
 }
 
 .light {
-  --clr-body-txt: var(--clr-accent-2);
+  --clr-body-txt: var(--clr-body);
   --clr-page-bg: var(--clr-white);
   --clr-surface-bg: var(--clr-accent-3);
   --clr-button-txt: var(--clr-dark);
@@ -77,6 +84,10 @@
   --clr-shadow-page: rgba(0, 0, 0, 0.15);
   --clr-navbar-link-hover: var(--clr-accent-1-dark);
   --clr-navbar-link-icon-active: var(--clr-dark);
+
+  /* About illustration colors */
+  --about-illustration-overlay: var(--clr-white);
+  --about-illustration-shade: var(--clr-white);
 
   /* ShadCN color variables */
   --background: var(--clr-white);
@@ -123,6 +134,10 @@
   --clr-shadow-page: rgba(57, 67, 64, 0.15);
   --clr-navbar-link-hover: var(--clr-accent-1-dark);
   --clr-navbar-link-icon-active: var(--clr-dark);
+
+  /* About illustration colors */
+  --about-illustration-overlay: var(--clr-black);
+  --about-illustration-shade: var(--clr-white);
 
   /* ShadCN color variables */
   --background: var(--clr-dark-2);
