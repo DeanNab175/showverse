@@ -11,6 +11,7 @@ import AboutIllustration from "../illustrations/about-illustration";
 
 import aboutData from "@/constants/data/about";
 import ExperienceContent from "../experience/experience-content";
+import HobbyContent from "../hobby/hobby-content";
 
 gsap.registerPlugin(useGSAP);
 
@@ -32,7 +33,10 @@ function AboutContent() {
 
       setEntryAnimations((tl) => {
         const q = gsap.utils.selector(sectionRef);
-        const textItems = q(".home-text");
+        const textItems = q(".text-transition");
+        const cards = q(".experience-card");
+        const hobbyTitle = q(".hobby-text-transition");
+        const hobbyItem = q(".hobby-item");
 
         if (imageRef.current) {
           tl.from(imageRef.current, {
@@ -46,6 +50,31 @@ function AboutContent() {
         tl.from(textItems, {
           opacity: 0,
           y: 16,
+          duration: 0.3,
+          ease: "power2.out",
+          stagger: 0.15,
+        });
+
+        tl.from(cards, {
+          opacity: 0,
+          y: 20,
+          rotate: 10,
+          duration: 0.3,
+          ease: "power2.out",
+          stagger: 0.15,
+        });
+
+        tl.from(hobbyTitle, {
+          opacity: 0,
+          y: 16,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+
+        tl.from(hobbyItem, {
+          opacity: 0,
+          y: 20,
+          rotate: 10,
           duration: 0.3,
           ease: "power2.out",
           stagger: 0.15,
@@ -69,41 +98,28 @@ function AboutContent() {
           </article>
 
           <article className="content">
-            <h1 className="home-text text-xl mb-4 text-primary">
+            <h1 className="text-transition text-2xl font-extrabold mb-4 text-primary">
               {content.pageTitle}
             </h1>
 
             {content.paragraphs.map((paragraph, i) => (
-              <p key={i} className="home-text text-xs mb-3">
+              <p key={i} className="text-transition text-xs-plus mb-3">
                 {paragraph}
               </p>
             ))}
 
-            {/* <p className="home-text text-xs mb-3">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-              euismod erat non erat feugiat, nec volutpat dolor faucibus. In
-              pharetra tortor non metus ultrices molestie. Aliquam quis
-              sollicitudin velit. Etiam enim tortor, aliquet et fringilla non,
-              facilisis in mauris. Maecenas aliquet vel odio in vulputate.
-              Vivamus venenatis sed justo et ultrices. Nulla a augue ut urna
-              scelerisque imperdiet. Curabitur sed vehicula neque, ut placerat
-              sapien. Proin in mauris sodales, hendrerit mi in, varius lacus.
-              Maecenas sed cursus magna.
-            </p>
-            <p className="home-text text-xs mb-3">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-              euismod erat non erat feugiat, nec volutpat dolor faucibus. In
-              pharetra tortor non metus ultrices molestie. Aliquam quis
-              sollicitudin velit. Etiam enim tortor, aliquet et fringilla non,
-              facilisis in mauris. Maecenas aliquet vel odio in vulputate.
-              Vivamus venenatis sed justo et ultrices. Nulla a augue ut urna
-              scelerisque imperdiet. Curabitur sed vehicula neque, ut placerat
-              sapien. Proin in mauris sodales, hendrerit mi in, varius lacus.
-              Maecenas sed cursus magna.
-            </p> */}
-
             {content.experiences && (
-              <ExperienceContent experiences={content.experiences} />
+              <div className="mt-10 mb-5">
+                <ExperienceContent experiences={content.experiences} />
+              </div>
+            )}
+
+            <h2 className="hobby-text-transition text-sm-plus font-medium mb-4">
+              {content.hobby.title}
+            </h2>
+
+            {content.hobby.list.length > 0 && (
+              <HobbyContent hobbies={content.hobby.list} />
             )}
 
             {/* <div className="button-link">

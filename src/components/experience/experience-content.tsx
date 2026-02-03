@@ -6,12 +6,14 @@ interface ExperienceContentProps {
 }
 
 function ExperienceContent({ experiences }: ExperienceContentProps) {
+  if (!experiences) return;
+
   return (
-    <div className="experiences w-4/5 grid grid-cols-3 gap-4">
+    <section className="experiences flex flex-wrap gap-5">
       {experiences.map((experience) => (
-        <ExperienceCard key={experience.description} experience={experience} />
+        <ExperienceCard key={experience.id} experience={experience} />
       ))}
-    </div>
+    </section>
   );
 }
 

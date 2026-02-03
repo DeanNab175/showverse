@@ -74,7 +74,7 @@ function HomeContent() {
           <article className="content">
             <div className="max-w-9/12">
               <h6 className="home-text text-xs">{content.greetMessage}</h6>
-              <h1 className="home-text text-4xl -ml-0.5 mb-4 text-primary">
+              <h1 className="home-text text-4xl -ml-0.5 mb-4 text-primary font-extrabold">
                 {content.name}
               </h1>
               <h2 className="home-text text-base mb-1.5">{content.jobTitle}</h2>
