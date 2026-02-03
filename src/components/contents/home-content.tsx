@@ -9,6 +9,7 @@ import { Button } from "../ui/button";
 import HomeIllustration from "../illustrations/home-illustration";
 import { useTransition } from "@/contexts/transition-context";
 import homeData from "@/constants/data/home";
+import { renderWithLineBreaks } from "@/lib/render-with-line-breaks";
 
 gsap.registerPlugin(useGSAP);
 
@@ -77,7 +78,9 @@ function HomeContent() {
               <h1 className="home-text text-4xl -ml-0.5 mb-4 text-primary font-extrabold">
                 {content.name}
               </h1>
-              <h2 className="home-text text-base mb-1.5">{content.jobTitle}</h2>
+              <h2 className="home-text text-base mb-1.5">
+                {renderWithLineBreaks(content.jobTitle)}
+              </h2>
               <p className="home-text text-xs mb-7">
                 {content.shortDescription}
               </p>
