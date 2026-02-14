@@ -1,24 +1,54 @@
 "use client";
 
-import { useRef } from "react";
+import { useCallback, useLayoutEffect, useRef } from "react";
+import Image from "next/image";
 
-import { gsap, useGSAP } from "@/lib/gsap";
-
+import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { useTransition } from "@/contexts/transition-context";
-import { Button } from "../ui/button";
+import aboutData from "@/constants/data/about";
+import { cn, isEmptyOrNullish } from "@/lib/utils";
 import AboutIllustration from "../illustrations/about-illustration";
 
-import aboutData from "@/constants/data/about";
+import type { ScrollAnimationType } from "@/types/animations-types";
+
+import { Button } from "../ui/button";
+import Heading from "../typography/heading";
 import ExperienceContent from "../experience/experience-content";
 import HobbyContent from "../hobby/hobby-content";
-import { cn, isEmptyOrNullish } from "@/lib/utils";
-import Image from "next/image";
-import Heading from "../typography/heading";
+import {
+  killScrollTriggers,
+  setScrollTriggerInitialStates,
+  setupScrollTriggers,
+} from "@/lib/scroll-trigger-utils";
+interface AboutContentProps {
+  scrollAnimations?: ScrollAnimationType[];
+}
 
-function AboutContent() {
+function AboutContent({ scrollAnimations = [] }: AboutContentProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const imageRef = useRef<HTMLElement | null>(null);
+  const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
   const { setEntryAnimations } = useTransition();
+
+  // Set initial states immediately on mount (before paint)
+  useLayoutEffect(() => {
+    setScrollTriggerInitialStates(scrollAnimations, sectionRef);
+  }, [scrollAnimations]);
+
+  const initializeScrollTriggers = useCallback(() => {
+    // Kill existing triggers
+    killScrollTriggers(scrollTriggersRef.current);
+    scrollTriggersRef.current = [];
+
+    // Setup new triggers
+    const triggers = setupScrollTriggers({
+      scrollAnimations,
+      scopeRef: sectionRef,
+      scrollerSelector: "main.page-content",
+    });
+
+    scrollTriggersRef.current = triggers;
+  }, [scrollAnimations]);
 
   useGSAP(
     () => {
@@ -79,32 +109,24 @@ function AboutContent() {
           ease: "power2.out",
           stagger: 0.15,
         });
+
+        // Setup ScrollTriggers after entry animations complete
+        tl.call(() => {
+          // Small delay to ensure DOM is settled and positions are correct
+          requestAnimationFrame(() => {
+            ScrollTrigger.refresh();
+            initializeScrollTriggers();
+          });
+        });
       });
 
-      const q = gsap.utils.selector(sectionRef);
-      const hireBanner = q("#section-about_hire_banner")[0];
-      const pageScroller =
-        document.querySelector<HTMLElement>("main.page-content");
-
-      if (hireBanner && pageScroller) {
-        const bannerTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: hireBanner,
-            scroller: pageScroller,
-            start: "top bottom",
-            toggleActions: "play none none none",
-            // markers: true,
-            invalidateOnRefresh: true,
-          },
-        });
-
-        bannerTl.from(hireBanner, {
-          opacity: 0,
-          y: 100,
-        });
-      }
+      // Cleanup function
+      return () => {
+        killScrollTriggers(scrollTriggersRef.current);
+        scrollTriggersRef.current = [];
+      };
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [initializeScrollTriggers] }
   );
 
   return (

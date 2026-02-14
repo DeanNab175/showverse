@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useRef } from "react";
-import { AnimationFn } from "@/types/page-animations-types";
+import { AnimationFn } from "@/types/animations-types";
 
 interface TransitionContextType {
   setEntryAnimations: (fn: AnimationFn) => void;

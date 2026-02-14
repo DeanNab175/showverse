@@ -3,7 +3,8 @@ import {
   AnimationFn,
   FreeAnimationFn,
   TimelineAnimationFn,
-} from "@/types/page-animations-types";
+} from "@/types/animations-types";
+import { ScrollTrigger } from "@/lib/gsap";
 
 const ANIMATION_CONFIG = {
   duration: {
@@ -87,7 +88,12 @@ export function createEntryTimeline(
   entryAnimationFn: AnimationFn,
   onComplete: () => void
 ) {
-  const entryTl = gsap.timeline({ onComplete });
+  const entryTl = gsap.timeline({
+    onComplete: () => {
+      ScrollTrigger.refresh();
+      onComplete();
+    },
+  });
 
   // Set initial clip-path to square
   entryTl.set(PAGE_ELEMENT_SELECTOR.shape, {
