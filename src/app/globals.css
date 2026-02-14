@@ -90,6 +90,8 @@
   --about-illustration-overlay: var(--clr-white);
   --about-illustration-shade: var(--clr-white);
 
+  --shadow-card: 4px 8px 16px rgba(0, 0, 0, 0.1);
+
   /* ShadCN color variables */
   --background: var(--clr-white);
   --foreground: var(--clr-accent-2);
@@ -139,6 +141,8 @@
   /* About illustration colors */
   --about-illustration-overlay: var(--clr-black);
   --about-illustration-shade: var(--clr-white);
+
+  --shadow-card: 4px 8px 16px rgba(57, 67, 64, 0.15);
 
   /* ShadCN color variables */
   --background: var(--clr-dark-2);
@@ -238,7 +242,7 @@
   --text-xs-plus: 0.8125rem; /* 13px */
   --text-sm-plus: 0.9375rem; /* 15px */
 
-  --shadow-card-sm: 4px 8px 16px rgba(0, 0, 0, 0.1);
+  --shadow-card-sm: var(--shadow-card);
 }
 
 @layer base {

@@ -2,16 +2,14 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+
+import { gsap, useGSAP } from "@/lib/gsap";
 
 import { Button } from "../ui/button";
 import HomeIllustration from "../illustrations/home-illustration";
 import { useTransition } from "@/contexts/transition-context";
 import homeData from "@/constants/data/home";
 import { renderWithLineBreaks } from "@/lib/render-with-line-breaks";
-
-gsap.registerPlugin(useGSAP);
 
 function HomeContent() {
   const sectionRef = useRef<HTMLElement | null>(null);

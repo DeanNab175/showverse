@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import Link from "next/link";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+
+import { gsap, useGSAP } from "@/lib/gsap";
 
 import { useTransition } from "@/contexts/transition-context";
 import { Button } from "../ui/button";
@@ -12,8 +11,9 @@ import AboutIllustration from "../illustrations/about-illustration";
 import aboutData from "@/constants/data/about";
 import ExperienceContent from "../experience/experience-content";
 import HobbyContent from "../hobby/hobby-content";
-
-gsap.registerPlugin(useGSAP);
+import { cn, isEmptyOrNullish } from "@/lib/utils";
+import Image from "next/image";
+import Heading from "../typography/heading";
 
 function AboutContent() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -80,59 +80,183 @@ function AboutContent() {
           stagger: 0.15,
         });
       });
+
+      const q = gsap.utils.selector(sectionRef);
+      const hireBanner = q("#section-about_hire_banner")[0];
+      const pageScroller =
+        document.querySelector<HTMLElement>("main.page-content");
+
+      if (hireBanner && pageScroller) {
+        const bannerTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: hireBanner,
+            scroller: pageScroller,
+            start: "top bottom",
+            toggleActions: "play none none none",
+            // markers: true,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        bannerTl.from(hireBanner, {
+          opacity: 0,
+          y: 100,
+        });
+      }
     },
     { scope: sectionRef }
   );
 
   return (
-    <div className="h-full flex flex-col justify-center">
-      {aboutData.map(({ name, content }) => (
-        <section
-          key={name}
-          ref={sectionRef}
-          id={`section-${name}`}
-          className="grid grid-cols-[minmax(0,11fr)_minmax(0,9fr)] gap-4 items-center"
-        >
-          <article ref={imageRef} className="image">
-            <AboutIllustration className="w-[80%] mr-auto h-auto" />
-          </article>
+    <section ref={sectionRef}>
+      {aboutData.map((section) => {
+        const {
+          content: sectionContent,
+          image: sectionImage,
+          name: sectionName,
+          sectionClass,
+          type: sectionType,
+          wrapperClass: sectionWrapperClass,
+        } = section;
 
-          <article className="content">
-            <h1 className="text-transition text-2xl font-extrabold mb-4 text-primary">
-              {content.pageTitle}
-            </h1>
+        if (isEmptyOrNullish(sectionContent)) return null;
 
-            {content.paragraphs.map((paragraph, i) => (
-              <p key={i} className="text-transition text-xs-plus mb-3">
-                {paragraph}
-              </p>
-            ))}
+        if (sectionType === "image-on-left") {
+          return (
+            <div
+              key={sectionName}
+              className={cn(
+                "h-full flex flex-col justify-center",
+                sectionWrapperClass
+              )}
+            >
+              <section
+                id={`section-${sectionName}`}
+                className={cn(
+                  "grid grid-cols-[minmax(0,11fr)_minmax(0,9fr)] gap-4 items-center",
+                  sectionClass
+                )}
+              >
+                <article ref={imageRef} className={sectionImage?.wrapperClass}>
+                  {sectionImage?.isIllustration ? (
+                    <AboutIllustration
+                      className={cn(
+                        "w-[80%] mr-auto h-auto",
+                        sectionImage?.illustration?.class
+                      )}
+                    />
+                  ) : (
+                    <Image
+                      src={sectionImage?.path as string}
+                      alt="About portfolio image"
+                      width={500}
+                      height={500}
+                    />
+                  )}
+                </article>
 
-            {content.experiences && (
-              <div className="mt-10 mb-5">
-                <ExperienceContent experiences={content.experiences} />
-              </div>
-            )}
+                <article className={sectionContent.wrapperClass}>
+                  {sectionContent.heading && (
+                    <Heading
+                      level={sectionContent.heading.level}
+                      className={sectionContent.heading.class}
+                    >
+                      {sectionContent.heading.text}
+                    </Heading>
+                  )}
 
-            <h2 className="hobby-text-transition text-sm-plus font-medium mb-4">
-              {content.hobby.title}
-            </h2>
+                  {sectionContent.paragraphs?.body.map((paragraph, i) => (
+                    <p key={i} className={sectionContent.paragraphs?.class}>
+                      {paragraph}
+                    </p>
+                  ))}
 
-            {content.hobby.list.length > 0 && (
-              <HobbyContent hobbies={content.hobby.list} />
-            )}
+                  {sectionContent.experiences && (
+                    <div className={sectionContent.experiences.wrapperClass}>
+                      <ExperienceContent
+                        experiences={sectionContent.experiences.list}
+                      />
+                    </div>
+                  )}
 
-            {/* <div className="button-link">
-            <Button variant="secondary" asChild>
-              <Link href="/portfolio" className="menu-nav-link">
-                View Portfolio
-              </Link>
-            </Button>
-          </div> */}
-          </article>
-        </section>
-      ))}
-    </div>
+                  {sectionContent.hobby?.heading && (
+                    <Heading
+                      level={sectionContent.hobby?.heading.level}
+                      className={sectionContent.hobby?.heading.class}
+                    >
+                      {sectionContent.hobby?.heading.text}
+                    </Heading>
+                  )}
+
+                  {sectionContent.hobby?.list &&
+                    sectionContent.hobby.list.length > 0 && (
+                      <HobbyContent hobbies={sectionContent.hobby?.list} />
+                    )}
+
+                  {sectionContent.cta && (
+                    <div className={sectionContent.cta.wrapperClass}>
+                      <Button variant={sectionContent.cta.variant}>
+                        {sectionContent.cta.label}
+                        {sectionContent.cta.iconClass && (
+                          <span className="text-base">
+                            <i className={sectionContent.cta.iconClass}></i>
+                          </span>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+                </article>
+              </section>
+            </div>
+          );
+        }
+
+        if (sectionType === "banner") {
+          return (
+            <div
+              key={sectionName}
+              className={cn(
+                "h-full flex flex-col justify-center",
+                sectionWrapperClass
+              )}
+            >
+              <section
+                key={sectionName}
+                id={`section-${sectionName}`}
+                className={sectionClass}
+              >
+                <article className={sectionContent.wrapperClass}>
+                  {sectionContent.heading && (
+                    <Heading
+                      level={sectionContent.heading.level}
+                      className={sectionContent.heading.class}
+                    >
+                      {sectionContent.heading.text}
+                    </Heading>
+                  )}
+                  {sectionContent.paragraphs?.body.map((paragraph, i) => (
+                    <p key={i} className={sectionContent.paragraphs?.class}>
+                      {paragraph}
+                    </p>
+                  ))}
+                </article>
+                <article className={section.ctaWrapperClass}>
+                  {sectionContent.cta && (
+                    <div className={sectionContent.cta.wrapperClass}>
+                      <Button variant={sectionContent.cta.variant}>
+                        {sectionContent.cta.label}
+                      </Button>
+                    </div>
+                  )}
+                </article>
+              </section>
+            </div>
+          );
+        }
+
+        return null;
+      })}
+    </section>
   );
 }
 

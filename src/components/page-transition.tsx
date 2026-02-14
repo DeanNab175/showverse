@@ -37,7 +37,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
       overlayRef,
       isRouteChange,
       entryAnimationFn,
-      handleComplete,
+      handleComplete
     );
 
     timeline.play();
@@ -48,7 +48,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
       const timeline = createExitTimeline(overlayRef, () => router.push(url));
       timeline.play();
     },
-    [router],
+    [router]
   );
 
   // Play entry animation on mount and route changes
