@@ -9,7 +9,10 @@ import aboutData from "@/constants/data/about";
 import { cn, isEmptyOrNullish } from "@/lib/utils";
 import AboutIllustration from "../illustrations/about-illustration";
 
-import type { ScrollAnimationType } from "@/types/animations-types";
+import type {
+  EntryAnimationType,
+  ScrollAnimationType,
+} from "@/types/animations-types";
 
 import { Button } from "../ui/button";
 import Heading from "../typography/heading";
@@ -20,11 +23,16 @@ import {
   setScrollTriggerInitialStates,
   setupScrollTriggers,
 } from "@/lib/scroll-trigger-utils";
+import { setupEntryAnimations } from "@/lib/entry-animations-utils";
 interface AboutContentProps {
+  entryAnimations?: EntryAnimationType[];
   scrollAnimations?: ScrollAnimationType[];
 }
 
-function AboutContent({ scrollAnimations = [] }: AboutContentProps) {
+function AboutContent({
+  entryAnimations = [],
+  scrollAnimations = [],
+}: AboutContentProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const imageRef = useRef<HTMLElement | null>(null);
   const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
@@ -62,61 +70,25 @@ function AboutContent({ scrollAnimations = [] }: AboutContentProps) {
       }
 
       setEntryAnimations((tl) => {
-        const q = gsap.utils.selector(sectionRef);
-        const textItems = q(".text-transition");
-        const cards = q(".experience-card");
-        const hobbyTitle = q(".hobby-text-transition");
-        const hobbyItem = q(".hobby-item");
-
-        if (imageRef.current) {
-          tl.from(imageRef.current, {
-            opacity: 0,
-            xPercent: -100,
-            duration: 0.5,
-            ease: "circ.out",
-          });
-        }
-
-        tl.from(textItems, {
-          opacity: 0,
-          y: 16,
-          duration: 0.3,
-          ease: "power2.out",
-          stagger: 0.15,
+        // Process entry animations and replace "image" selector with imageRef
+        const processedEntryAnimations = entryAnimations.map((anim) => {
+          if (anim.selector === "image") {
+            return { ...anim, selector: imageRef };
+          }
+          return anim;
         });
 
-        tl.from(cards, {
-          opacity: 0,
-          y: 20,
-          rotate: 10,
-          duration: 0.3,
-          ease: "power2.out",
-          stagger: 0.15,
-        });
-
-        tl.from(hobbyTitle, {
-          opacity: 0,
-          y: 16,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-
-        tl.from(hobbyItem, {
-          opacity: 0,
-          y: 20,
-          rotate: 10,
-          duration: 0.3,
-          ease: "power2.out",
-          stagger: 0.15,
-        });
-
-        // Setup ScrollTriggers after entry animations complete
-        tl.call(() => {
-          // Small delay to ensure DOM is settled and positions are correct
-          requestAnimationFrame(() => {
-            ScrollTrigger.refresh();
-            initializeScrollTriggers();
-          });
+        setupEntryAnimations({
+          entryAnimations: processedEntryAnimations,
+          timeline: tl,
+          scopeRef: sectionRef,
+          onComplete: () => {
+            // Setup ScrollTriggers after entry animations complete
+            requestAnimationFrame(() => {
+              ScrollTrigger.refresh();
+              initializeScrollTriggers();
+            });
+          },
         });
       });
 
@@ -126,7 +98,10 @@ function AboutContent({ scrollAnimations = [] }: AboutContentProps) {
         scrollTriggersRef.current = [];
       };
     },
-    { scope: sectionRef, dependencies: [initializeScrollTriggers] }
+    {
+      scope: sectionRef,
+      dependencies: [initializeScrollTriggers, entryAnimations],
+    }
   );
 
   return (
