@@ -4,12 +4,13 @@ import { useRef } from "react";
 import Link from "next/link";
 
 import { gsap, useGSAP } from "@/lib/gsap";
-
-import { Button } from "../ui/button";
-import HomeIllustration from "../illustrations/home-illustration";
-import { useTransition } from "@/contexts/transition-context";
-import homeData from "@/constants/data/home";
 import { renderWithLineBreaks } from "@/lib/render-with-line-breaks";
+import homeData from "@/constants/data/home";
+
+import { useTransition } from "@/contexts/transition-context";
+
+import IllustrationComponent from "../illustrations/illustration-component";
+import { Button } from "../ui/button";
 
 function HomeContent() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -63,7 +64,7 @@ function HomeContent() {
 
   return (
     <div className="h-full flex flex-col justify-center">
-      {homeData.map(({ name, content }) => (
+      {homeData.map(({ name, content, image }) => (
         <section
           key={name}
           ref={sectionRef}
@@ -94,7 +95,10 @@ function HomeContent() {
             </div>
           </article>
           <article ref={imageRef} className="image">
-            <HomeIllustration className="w-[95%] ml-auto h-auto" />
+            <IllustrationComponent
+              svgString={image.illustration.html}
+              className={image.illustration.class}
+            />
           </article>
         </section>
       ))}

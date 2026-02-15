@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 import { AboutSectionType } from "@/types/about-data-types";
 
-import AboutIllustration from "@/components/illustrations/about-illustration";
+import IllustrationComponent from "../illustrations/illustration-component";
 import Heading from "@/components/typography/heading";
 import ExperienceContent from "@/components/experience/experience-content";
 import HobbyContent from "@/components/hobby/hobby-content";
@@ -39,21 +39,19 @@ export default function ImageOnLeftSection({
           id={sectionImage?.wrapperId}
           className={sectionImage?.wrapperClass}
         >
-          {sectionImage?.isIllustration ? (
-            <AboutIllustration
-              className={cn(
-                "w-[80%] mr-auto h-auto",
-                sectionImage?.illustration?.class
-              )}
+          {sectionImage?.isIllustration && sectionImage?.illustration?.html ? (
+            <IllustrationComponent
+              svgString={sectionImage.illustration.html}
+              className={sectionImage.illustration.class}
             />
-          ) : (
+          ) : sectionImage?.path ? (
             <Image
-              src={sectionImage?.path as string}
+              src={sectionImage.path}
               alt="About portfolio image"
               width={500}
               height={500}
             />
-          )}
+          ) : null}
         </article>
 
         <article className={sectionContent.wrapperClass}>
