@@ -1,6 +1,12 @@
 import type { ButtonVariant } from "@/components/ui/button";
-import { ExperienceType } from "./experience-types";
+import type { ExperienceType } from "./experience-types";
 import type { HeadingLevelType } from "./typography-types";
+import type {
+  EntryAnimationType,
+  ScrollAnimationType,
+} from "./animations-types";
+
+type SectionType = "image-on-left" | "banner";
 
 type HeadingType = {
   class?: string;
@@ -30,8 +36,9 @@ type HobbyLayoutType = {
 };
 
 export type AboutSectionType = {
+  id: string;
   name: string;
-  type: "image-on-left" | "banner";
+  type: SectionType;
   wrapperClass?: string;
   sectionClass?: string;
   image?: ImageType;
@@ -55,4 +62,6 @@ export type AboutSectionType = {
       wrapperClass?: string;
     };
   };
+  entryAnimations?: EntryAnimationType[];
+  scrollAnimations?: ScrollAnimationType[];
 };

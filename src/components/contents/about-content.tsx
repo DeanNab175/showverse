@@ -1,41 +1,44 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useRef } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { useTransition } from "@/contexts/transition-context";
-import aboutData from "@/constants/data/about";
+
+import { ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { cn, isEmptyOrNullish } from "@/lib/utils";
 import AboutIllustration from "../illustrations/about-illustration";
-
-import type {
-  EntryAnimationType,
-  ScrollAnimationType,
-} from "@/types/animations-types";
-
-import { Button } from "../ui/button";
-import Heading from "../typography/heading";
-import ExperienceContent from "../experience/experience-content";
-import HobbyContent from "../hobby/hobby-content";
 import {
   killScrollTriggers,
   setScrollTriggerInitialStates,
   setupScrollTriggers,
 } from "@/lib/scroll-trigger-utils";
 import { setupEntryAnimations } from "@/lib/entry-animations-utils";
+
+import type { AboutSectionType } from "@/types/about-data-types";
+
+import { Button } from "../ui/button";
+import Heading from "../typography/heading";
+import ExperienceContent from "../experience/experience-content";
+import HobbyContent from "../hobby/hobby-content";
 interface AboutContentProps {
-  entryAnimations?: EntryAnimationType[];
-  scrollAnimations?: ScrollAnimationType[];
+  data: AboutSectionType[];
 }
 
-function AboutContent({
-  entryAnimations = [],
-  scrollAnimations = [],
-}: AboutContentProps) {
+function AboutContent({ data }: AboutContentProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
   const { setEntryAnimations } = useTransition();
+
+  // Extract animations from data
+  const { entryAnimations, scrollAnimations } = useMemo(() => {
+    return {
+      entryAnimations: data.flatMap((section) => section.entryAnimations || []),
+      scrollAnimations: data.flatMap(
+        (section) => section.scrollAnimations || []
+      ),
+    };
+  }, [data]);
 
   // Set initial states immediately on mount (before paint)
   useLayoutEffect(() => {
@@ -97,7 +100,7 @@ function AboutContent({
 
   return (
     <section ref={sectionRef}>
-      {aboutData.map((section) => {
+      {data.map((section) => {
         const {
           content: sectionContent,
           image: sectionImage,
