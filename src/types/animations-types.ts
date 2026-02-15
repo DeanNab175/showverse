@@ -21,7 +21,8 @@ export interface ScrollAnimationType {
 
 // Entry animation configuration for page load
 export interface EntryAnimationType {
-  selector: string | React.RefObject<HTMLElement | null>;
+  selector: string;
   animation: gsap.TweenVars;
   stagger?: number;
+  position?: gsap.Position;
 }

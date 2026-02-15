@@ -7,6 +7,7 @@ const aboutData: AboutSectionType[] = [
     wrapperClass: "",
     sectionClass: "",
     image: {
+      wrapperId: "about-image",
       wrapperClass: "image",
       isIllustration: true,
       illustration: {

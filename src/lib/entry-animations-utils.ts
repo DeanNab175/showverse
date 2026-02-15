@@ -22,28 +22,20 @@ export function setupEntryAnimations({
 
   const q = gsap.utils.selector(scopeRef);
 
-  entryAnimations.forEach(({ selector, animation, stagger }) => {
-    // Handle ref objects
-    if (
-      typeof selector === "object" &&
-      selector !== null &&
-      "current" in selector
-    ) {
-      if (selector.current) {
-        timeline.from(selector.current, animation);
-      }
-      return;
-    }
-
-    // Handle string selectors
-    const elements = q(selector as string);
+  entryAnimations.forEach(({ selector, animation, stagger, position }) => {
+    const elements = q(selector);
 
     if (elements.length === 0) return;
 
     const animationConfig =
       stagger !== undefined ? { ...animation, stagger } : animation;
 
-    timeline.from(elements, animationConfig);
+    // Use the provided position, otherwise let timeline handle default positioning
+    if (position !== undefined) {
+      timeline.from(elements, animationConfig, position);
+    } else {
+      timeline.from(elements, animationConfig);
+    }
   });
 
   // Add completion callback if provided

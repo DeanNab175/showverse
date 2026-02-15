@@ -9,6 +9,7 @@ type HeadingType = {
 };
 
 type ImageType = {
+  wrapperId?: string;
   wrapperClass?: string;
   isIllustration: boolean;
   illustration: {

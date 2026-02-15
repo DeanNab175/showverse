@@ -34,7 +34,6 @@ function AboutContent({
   scrollAnimations = [],
 }: AboutContentProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const imageRef = useRef<HTMLElement | null>(null);
   const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
   const { setEntryAnimations } = useTransition();
 
@@ -70,16 +69,8 @@ function AboutContent({
       }
 
       setEntryAnimations((tl) => {
-        // Process entry animations and replace "image" selector with imageRef
-        const processedEntryAnimations = entryAnimations.map((anim) => {
-          if (anim.selector === "image") {
-            return { ...anim, selector: imageRef };
-          }
-          return anim;
-        });
-
         setupEntryAnimations({
-          entryAnimations: processedEntryAnimations,
+          entryAnimations,
           timeline: tl,
           scopeRef: sectionRef,
           onComplete: () => {
@@ -134,7 +125,10 @@ function AboutContent({
                   sectionClass
                 )}
               >
-                <article ref={imageRef} className={sectionImage?.wrapperClass}>
+                <article
+                  id={sectionImage?.wrapperId}
+                  className={sectionImage?.wrapperClass}
+                >
                   {sectionImage?.isIllustration ? (
                     <AboutIllustration
                       className={cn(

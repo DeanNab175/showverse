@@ -21,7 +21,7 @@ const scrollAnimationsConfig = [
 // Entry animations configuration
 const entryAnimationsConfig: EntryAnimationType[] = [
   {
-    selector: "image", // Special key for imageRef
+    selector: "#about-image",
     animation: {
       opacity: 0,
       xPercent: -100,
@@ -39,6 +39,7 @@ const entryAnimationsConfig: EntryAnimationType[] = [
       ease: "power2.out",
     },
     stagger: 0.15,
+    position: "-=1",
   },
   {
     selector: ".experience-card",
