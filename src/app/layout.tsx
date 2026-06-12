@@ -14,8 +14,12 @@ const mPlusRounded = M_PLUS_Rounded_1c({
 });
 
 export const metadata: Metadata = {
-  title: "ShowVerse",
-  description: "Showcasing verse for your work.",
+  title: {
+    template: "%s | ShowVerse",
+    default: "ShowVerse",
+  },
+  description:
+    "Portfolio of Donald Smith — Freelance Web & UI/UX Designer who builds digital experiences that work beautifully and feel effortless.",
 };
 
 interface RootLayoutProps {
