@@ -1,6 +1,9 @@
 import AboutContent from "@/components/contents/about-content";
 import aboutData from "@/constants/data/about";
-import { EntryAnimationType } from "@/types/animations-types";
+// import { EntryAnimationType } from "@/types/animations-types";
+import pagesMetadata from "@/constants/data/metadata";
+
+export const metadata = pagesMetadata.about;
 
 // Extract and flatten all entry animations from aboutData
 // const entryAnimationsConfig: EntryAnimationType[] = aboutData.flatMap(
