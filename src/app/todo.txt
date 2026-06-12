@@ -1,0 +1,17 @@
+SEO is only minimally implemented. Here's what's present and what's missing:
+
+What's there:
+
+Basic title and description in layout.tsx:16-19 — just the defaults Next.js gives you
+lang="en" on the <html> tag
+A custom icon.svg favicon
+What's missing:
+
+No openGraph or twitter metadata (no social sharing cards)
+No keywords or authors
+No per-page metadata — every page shares the same generic title/description from the root layout
+No robots.txt or sitemap.xml
+No canonical URL
+No structured data (JSON-LD)
+No OG image for link previews
+For a portfolio site, the most impactful things to add would be per-page metadata (unique titles/descriptions), an OG image, and a sitemap.xml. Want me to implement any of these?
