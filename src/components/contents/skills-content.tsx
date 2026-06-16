@@ -36,10 +36,13 @@ function SkillsContent({ data }: SkillsContentProps) {
             {section.name === "skills" && (
               <section className="flex flex-wrap justify-between gap-x-10">
                 {categories?.map((category) => (
-                  <article key={category.label} className="lg:max-w-[38%]">
+                  <article
+                    key={category.label}
+                    className={category.items.wrapperClass}
+                  >
                     <p className="text-base mb-3">{category.label}</p>
                     <div className="flex flex-wrap gap-4">
-                      {category.items.map((item) => (
+                      {category.items.list?.map((item) => (
                         <IconCard
                           key={item.name}
                           name={item.name}

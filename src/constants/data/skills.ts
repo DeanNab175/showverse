@@ -14,48 +14,54 @@ const skillsData: SkillsSectionType[] = [
       categories: [
         {
           label: "Web developer",
-          items: [
-            { name: "HTML5", iconPath: "/skill-icons/html5.svg" },
-            { name: "CSS3", iconPath: "/skill-icons/css3.svg" },
-            { name: "JavaScript", iconPath: "/skill-icons/javascript.svg" },
-            { name: "Sass", iconPath: "/skill-icons/sass.svg" },
-            { name: "React", iconPath: "/skill-icons/react.svg" },
-            { name: "Vue.js", iconPath: "/skill-icons/vue.svg" },
-            { name: "Node.js", iconPath: "/skill-icons/node-js.svg" },
-            { name: "PHP", iconPath: "/skill-icons/php.svg" },
-            { name: "Git", iconPath: "/skill-icons/git.svg" },
-            { name: "MySQL", iconPath: "/skill-icons/mysql.svg" },
-          ],
+          items: {
+            wrapperClass: "max-w-full lg:max-w-[38%] mb-4 lg:mb-0",
+            list: [
+              { name: "HTML5", iconPath: "/skill-icons/html5.svg" },
+              { name: "CSS3", iconPath: "/skill-icons/css3.svg" },
+              { name: "JavaScript", iconPath: "/skill-icons/javascript.svg" },
+              { name: "Sass", iconPath: "/skill-icons/sass.svg" },
+              { name: "React", iconPath: "/skill-icons/react.svg" },
+              { name: "Vue.js", iconPath: "/skill-icons/vue.svg" },
+              { name: "Node.js", iconPath: "/skill-icons/node-js.svg" },
+              { name: "PHP", iconPath: "/skill-icons/php.svg" },
+              { name: "Git", iconPath: "/skill-icons/git.svg" },
+              { name: "MySQL", iconPath: "/skill-icons/mysql.svg" },
+            ],
+          },
         },
         {
           label: "UI/UX designer",
-          items: [
-            { name: "Figma", iconPath: "/skill-icons/figma.svg" },
-            { name: "Adobe XD", iconPath: "/skill-icons/adobe-xd.svg" },
-            {
-              name: "Photoshop",
-              iconPath: "/skill-icons/adobe-photoshop.svg",
-            },
-            {
-              name: "Illustrator",
-              iconPath: "/skill-icons/adobe-illustrator.svg",
-            },
-            {
-              name: "Premiere Pro",
-              iconPath: "/skill-icons/adobe-premiere.svg",
-            },
-            {
-              name: "After Effects",
-              iconPath: "/skill-icons/adobe-after-effects.svg",
-            },
-            { name: "Animate", iconPath: "/skill-icons/adobe-animate.svg" },
-            {
-              name: "Dreamweaver",
-              iconPath: "/skill-icons/adobe-dreamweaver.svg",
-            },
-            { name: "3ds Max", iconPath: "/skill-icons/3ds-max-full.svg" },
-            { name: "Maya", iconPath: "/skill-icons/maya-2017.svg" },
-          ],
+          items: {
+            wrapperClass: "max-w-full lg:max-w-[38%]",
+            list: [
+              { name: "Figma", iconPath: "/skill-icons/figma.svg" },
+              { name: "Adobe XD", iconPath: "/skill-icons/adobe-xd.svg" },
+              {
+                name: "Photoshop",
+                iconPath: "/skill-icons/adobe-photoshop.svg",
+              },
+              {
+                name: "Illustrator",
+                iconPath: "/skill-icons/adobe-illustrator.svg",
+              },
+              {
+                name: "Premiere Pro",
+                iconPath: "/skill-icons/adobe-premiere.svg",
+              },
+              {
+                name: "After Effects",
+                iconPath: "/skill-icons/adobe-after-effects.svg",
+              },
+              { name: "Animate", iconPath: "/skill-icons/adobe-animate.svg" },
+              {
+                name: "Dreamweaver",
+                iconPath: "/skill-icons/adobe-dreamweaver.svg",
+              },
+              { name: "3ds Max", iconPath: "/skill-icons/3ds-max-full.svg" },
+              { name: "Maya", iconPath: "/skill-icons/maya-2017.svg" },
+            ],
+          },
         },
       ],
     },
@@ -71,7 +77,7 @@ const skillsData: SkillsSectionType[] = [
         class: "text-xl mb-7 font-medium",
       },
       services: {
-        wrapperClass: "grid grid-cols-3 gap-5",
+        wrapperClass: "grid grid-cols-2 lg:grid-cols-3 gap-5",
         list: [
           {
             iconClass: "icon-coding",

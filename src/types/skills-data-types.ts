@@ -14,7 +14,10 @@ export type SkillItemType = {
 export type SkillCategoryType = {
   label: string;
   labelClass?: string;
-  items: SkillItemType[];
+  items: {
+    wrapperClass?: string;
+    list: SkillItemType[];
+  };
 };
 
 export type ServiceItemType = {
