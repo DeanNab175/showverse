@@ -6,7 +6,7 @@ interface ServiceCardProps {
 
 function ServiceCard({ title, iconClass, description }: ServiceCardProps) {
   return (
-    <article className="bg-skills-card rounded-2xl p-5">
+    <article className="bg-skills-card rounded-lg p-5">
       <div className="service-icon mb-2">
         <span className={`text-2xl ${iconClass}`}></span>
       </div>
