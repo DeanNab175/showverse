@@ -4,10 +4,12 @@ const skillsData: SkillsSectionType[] = [
   {
     id: "skills_section",
     name: "skills",
+    class: "mb-4",
     content: {
       heading: {
         text: "Skills",
         level: 2,
+        class: "text-xl mb-4 font-medium",
       },
       categories: [
         {
@@ -61,55 +63,54 @@ const skillsData: SkillsSectionType[] = [
   {
     id: "services_section",
     name: "services",
+    class: "py-6",
     content: {
       heading: {
         text: "Services",
         level: 2,
+        class: "text-xl mb-7 font-medium",
       },
-      services: [
-        {
-          icon: "FileCode2",
-          iconClass: "icon-coding",
-          title: "Web Development",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at porta turpis.",
-        },
-        {
-          icon: "Pen",
-          iconClass: "icon-paint-brush",
-          title: "UI/UX Design",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at porta turpis.",
-        },
-        {
-          icon: "Palette",
-          iconClass: "icon-palette",
-          title: "Graphic Design",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at porta turpis.",
-        },
-        {
-          icon: "Wand2",
-          iconClass: "icon-color-bucket",
-          title: "Web Design",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at porta turpis.",
-        },
-        {
-          icon: "BarChart2",
-          iconClass: "icon-library",
-          title: "UX Research",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at porta turpis.",
-        },
-        {
-          icon: "SearchCheck",
-          iconClass: "icon-search-codes",
-          title: "SEO",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at porta turpis.",
-        },
-      ],
+      services: {
+        wrapperClass: "grid grid-cols-3 gap-5",
+        list: [
+          {
+            iconClass: "icon-coding",
+            title: "Web Development",
+            description:
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at porta turpis.",
+          },
+          {
+            iconClass: "icon-paint-brush",
+            title: "UI/UX Design",
+            description:
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at porta turpis.",
+          },
+          {
+            iconClass: "icon-palette",
+            title: "Graphic Design",
+            description:
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at porta turpis.",
+          },
+          {
+            iconClass: "icon-color-bucket",
+            title: "Web Design",
+            description:
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at porta turpis.",
+          },
+          {
+            iconClass: "icon-library",
+            title: "UX Research",
+            description:
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at porta turpis.",
+          },
+          {
+            iconClass: "icon-search-codes",
+            title: "SEO",
+            description:
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at porta turpis.",
+          },
+        ],
+      },
     },
   },
 ];
