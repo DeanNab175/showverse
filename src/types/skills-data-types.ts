@@ -19,6 +19,7 @@ export type SkillCategoryType = {
 
 export type ServiceItemType = {
   icon: string;
+  iconClass: string;
   title: string;
   description: string;
 };

@@ -35,6 +35,9 @@
   --clr-dark-2: oklch(0.1965 0.0051 173.82);
   --clr-body: var(--clr-accent-2);
 
+  --clr-skills-card-light: oklch(0.961 0.0233 122.72);
+  --clr-skills-card-dark: oklch(0.27 0.02 173.12);
+
   /* Social Medias colors */
   --clr-facebook: oklch(0.5891 0.2029 257.86);
   --clr-linkedin: oklch(0.5458 0.130182 242.2738);
@@ -85,6 +88,8 @@
   --clr-shadow-page: rgba(0, 0, 0, 0.15);
   --clr-navbar-link-hover: var(--clr-accent-1-dark);
   --clr-navbar-link-icon-active: var(--clr-dark);
+
+  --clr-skills-card: var(--clr-skills-card-light);
 
   /* About illustration colors */
   --about-illustration-overlay: var(--clr-white);
@@ -137,6 +142,8 @@
   --clr-shadow-page: rgba(57, 67, 64, 0.15);
   --clr-navbar-link-hover: var(--clr-accent-1-dark);
   --clr-navbar-link-icon-active: var(--clr-dark);
+
+  --clr-skills-card: var(--clr-skills-card-dark);
 
   /* About illustration colors */
   --about-illustration-overlay: var(--clr-black);
@@ -201,6 +208,8 @@
   --color-button-secondary-txt: var(--clr-button-secondary-txt);
   --color-navbar-link-hover: var(--clr-navbar-link-hover);
   --color-navbar-link-icon-active: var(--clr-navbar-link-icon-active);
+
+  --color-skills-card: var(--clr-skills-card);
 
   /* ShadCN color variables */
   --color-sidebar-ring: var(--sidebar-ring);
