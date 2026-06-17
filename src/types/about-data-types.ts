@@ -49,6 +49,4 @@ export interface AboutSectionType extends BaseSectionType<AboutSectionContent> {
   image?: ImageType;
   contentClass?: string;
   ctaWrapperClass?: string;
-  entryAnimations?: EntryAnimationType[];
-  scrollAnimations?: ScrollAnimationType[];
 }
