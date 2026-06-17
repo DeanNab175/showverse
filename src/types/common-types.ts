@@ -1,3 +1,4 @@
+import { EntryAnimationType, ScrollAnimationType } from "./animations-types";
 import type { HeadingLevelType } from "./typography-types";
 
 export type HeadingType = {
@@ -15,4 +16,6 @@ export type BaseSectionType<TContent extends object = object> = {
     wrapperClass?: string;
     heading?: HeadingType;
   } & TContent;
+  entryAnimations?: EntryAnimationType[];
+  scrollAnimations?: ScrollAnimationType[];
 };

@@ -9,13 +9,13 @@ const skillsData: SkillsSectionType[] = [
       heading: {
         text: "Skills",
         level: 2,
-        class: "text-xl mb-4 font-medium",
+        class: "text-transition text-xl mb-4 font-medium",
       },
       categories: [
         {
           label: {
             text: "Web developer",
-            class: "text-base mb-3",
+            class: "text-transition text-base mb-3",
           },
           items: {
             wrapperClass: "max-w-full lg:max-w-[38%] mb-4 lg:mb-0",
@@ -36,7 +36,7 @@ const skillsData: SkillsSectionType[] = [
         {
           label: {
             text: "UI/UX designer",
-            class: "text-base mb-3",
+            class: "text-transition text-base mb-3",
           },
           items: {
             wrapperClass: "max-w-full lg:max-w-[38%]",
@@ -71,6 +71,31 @@ const skillsData: SkillsSectionType[] = [
         },
       ],
     },
+    entryAnimations: [
+      {
+        selector: ".text-transition",
+        animation: {
+          opacity: 0,
+          y: 16,
+          duration: 0.3,
+          ease: "power2.out",
+        },
+        stagger: 0.15,
+        position: "-=1",
+      },
+      {
+        selector: ".category-item",
+        animation: {
+          opacity: 0,
+          y: 20,
+          rotate: 10,
+          duration: 0.3,
+          ease: "power2.out",
+        },
+        stagger: 0.15,
+      },
+    ],
+    scrollAnimations: [],
   },
   {
     id: "services_section",
@@ -80,7 +105,7 @@ const skillsData: SkillsSectionType[] = [
       heading: {
         text: "Services",
         level: 2,
-        class: "text-xl mb-7 font-medium",
+        class: "service-text-transition text-xl mb-7 font-medium",
       },
       services: {
         wrapperClass: "grid grid-cols-2 lg:grid-cols-3 gap-5",
@@ -124,6 +149,29 @@ const skillsData: SkillsSectionType[] = [
         ],
       },
     },
+    entryAnimations: [
+      {
+        selector: ".service-text-transition",
+        animation: {
+          opacity: 0,
+          y: 16,
+          duration: 0.3,
+          ease: "power2.out",
+        },
+        stagger: 0.15,
+      },
+      {
+        selector: ".service-item",
+        animation: {
+          opacity: 0,
+          y: 20,
+          duration: 0.3,
+          ease: "power2.out",
+        },
+        stagger: 0.15,
+      },
+    ],
+    scrollAnimations: [],
   },
 ];
 
