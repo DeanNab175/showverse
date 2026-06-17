@@ -23,7 +23,7 @@ function SkillsContent({ data }: SkillsContentProps) {
   }, [setEntryAnimations]);
 
   return (
-    <section ref={sectionRef} className="h-full flex flex-col justify-between">
+    <section ref={sectionRef} className="h-full">
       {data.map((section) => {
         if (isEmptyOrNullish(section.content)) return null;
 
@@ -37,10 +37,12 @@ function SkillsContent({ data }: SkillsContentProps) {
               <section className="flex flex-wrap justify-between gap-x-10">
                 {categories?.map((category) => (
                   <article
-                    key={category.label}
+                    key={category.label.text}
                     className={category.items.wrapperClass}
                   >
-                    <p className="text-base mb-3">{category.label}</p>
+                    <p className={category.label.class}>
+                      {category.label.text}
+                    </p>
                     <div className="flex flex-wrap gap-4">
                       {category.items.list?.map((item) => (
                         <IconCard

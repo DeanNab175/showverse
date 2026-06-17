@@ -13,7 +13,10 @@ const skillsData: SkillsSectionType[] = [
       },
       categories: [
         {
-          label: "Web developer",
+          label: {
+            text: "Web developer",
+            class: "text-base mb-3",
+          },
           items: {
             wrapperClass: "max-w-full lg:max-w-[38%] mb-4 lg:mb-0",
             list: [
@@ -31,7 +34,10 @@ const skillsData: SkillsSectionType[] = [
           },
         },
         {
-          label: "UI/UX designer",
+          label: {
+            text: "UI/UX designer",
+            class: "text-base mb-3",
+          },
           items: {
             wrapperClass: "max-w-full lg:max-w-[38%]",
             list: [

@@ -1,10 +1,6 @@
-import type { HeadingLevelType } from "./typography-types";
+import type { BaseSectionType } from "./common-types";
 
-export type HeadingType = {
-  class?: string;
-  text: string;
-  level: HeadingLevelType;
-};
+export type { HeadingType } from "./common-types";
 
 export type SkillItemType = {
   name: string;
@@ -12,7 +8,10 @@ export type SkillItemType = {
 };
 
 export type SkillCategoryType = {
-  label: string;
+  label: {
+    text: string;
+    class: string;
+  };
   labelClass?: string;
   items: {
     wrapperClass?: string;
@@ -26,19 +25,14 @@ export type ServiceItemType = {
   description: string;
 };
 
-export type SkillsSectionType = {
-  id: string;
-  name: string;
-  class?: string;
-  wrapperClass?: string;
-  sectionClass?: string;
-  content: {
+type SkillsSectionContent = {
+  categories?: SkillCategoryType[];
+  services?: {
     wrapperClass?: string;
-    heading?: HeadingType;
-    categories?: SkillCategoryType[];
-    services?: {
-      wrapperClass?: string;
-      list: ServiceItemType[];
-    };
+    list: ServiceItemType[];
   };
 };
+
+export interface SkillsSectionType extends BaseSectionType<SkillsSectionContent> {
+  class?: string;
+}
