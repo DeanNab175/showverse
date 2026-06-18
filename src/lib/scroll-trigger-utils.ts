@@ -33,10 +33,10 @@ export function setupScrollTriggers({
   const q = gsap.utils.selector(scopeRef);
 
   scrollAnimations.forEach(
-    ({ selector, animation, scrollTrigger: stConfig }) => {
+    ({ selector, animation, scrollTrigger: stConfig, stagger }) => {
       const elements = q(selector);
 
-      elements.forEach((element) => {
+      elements.forEach((element, index) => {
         // Create timeline with ScrollTrigger
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -47,7 +47,10 @@ export function setupScrollTriggers({
           },
         });
 
-        tl.to(element, animation.to);
+        tl.to(element, {
+          ...animation.to,
+          delay: stagger ? index * stagger : animation.to.delay,
+        });
 
         // Store the trigger for cleanup
         if (tl.scrollTrigger) {

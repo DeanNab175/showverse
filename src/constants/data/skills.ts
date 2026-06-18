@@ -13,9 +13,10 @@ const skillsData: SkillsSectionType[] = [
       },
       categories: [
         {
+          id: "web-developer-category",
           label: {
             text: "Web developer",
-            class: "text-transition text-base mb-3",
+            class: "category-label-text text-base mb-3",
           },
           items: {
             wrapperClass: "max-w-full lg:max-w-[38%] mb-4 lg:mb-0",
@@ -34,9 +35,10 @@ const skillsData: SkillsSectionType[] = [
           },
         },
         {
+          id: "ui-ux-category",
           label: {
             text: "UI/UX designer",
-            class: "text-transition text-base mb-3",
+            class: "category-label-text text-base mb-3",
           },
           items: {
             wrapperClass: "max-w-full lg:max-w-[38%]",
@@ -80,11 +82,20 @@ const skillsData: SkillsSectionType[] = [
           duration: 0.3,
           ease: "power2.out",
         },
-        stagger: 0.15,
         position: "-=1",
       },
       {
-        selector: ".category-item",
+        selector: "#web-developer-category .category-label-text",
+        animation: {
+          opacity: 0,
+          y: 16,
+          duration: 0.3,
+          ease: "power2.out",
+        },
+        position: "<",
+      },
+      {
+        selector: "#web-developer-category .category-item",
         animation: {
           opacity: 0,
           y: 20,
@@ -93,6 +104,28 @@ const skillsData: SkillsSectionType[] = [
           ease: "power2.out",
         },
         stagger: 0.15,
+        position: "<",
+      },
+      {
+        selector: "#ui-ux-category .category-label-text",
+        animation: {
+          opacity: 0,
+          y: 16,
+          duration: 0.3,
+          ease: "power2.out",
+        },
+      },
+      {
+        selector: "#ui-ux-category .category-item",
+        animation: {
+          opacity: 0,
+          y: 20,
+          rotate: 10,
+          duration: 0.3,
+          ease: "power2.out",
+        },
+        stagger: 0.15,
+        position: "<",
       },
     ],
     scrollAnimations: [],
@@ -160,18 +193,27 @@ const skillsData: SkillsSectionType[] = [
         },
         stagger: 0.15,
       },
+    ],
+    scrollAnimations: [
       {
         selector: ".service-item",
         animation: {
-          opacity: 0,
-          y: 20,
-          duration: 0.3,
-          ease: "power2.out",
+          from: { opacity: 0, y: 20, rotate: 2 },
+          to: {
+            opacity: 1,
+            y: 0,
+            rotate: 0,
+            duration: 0.3,
+            ease: "power2.out",
+          },
+        },
+        scrollTrigger: {
+          start: "75% bottom",
+          toggleActions: "play none none none",
         },
         stagger: 0.15,
       },
     ],
-    scrollAnimations: [],
   },
 ];
 

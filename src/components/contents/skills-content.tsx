@@ -111,6 +111,7 @@ function SkillsContent({ data }: SkillsContentProps) {
                 {categories?.map((category) => (
                   <article
                     key={category.label.text}
+                    id={category.id}
                     className={category.items.wrapperClass}
                   >
                     <p className={category.label.class}>

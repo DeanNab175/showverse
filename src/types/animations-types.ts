@@ -17,6 +17,7 @@ export interface ScrollAnimationType {
     toggleActions?: string;
     [key: string]: any;
   };
+  stagger?: number;
 }
 
 // Entry animation configuration for page load

@@ -8,6 +8,7 @@ export type SkillItemType = {
 };
 
 export type SkillCategoryType = {
+  id: string;
   label: {
     text: string;
     class: string;
