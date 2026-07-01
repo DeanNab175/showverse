@@ -1,12 +1,7 @@
 "use client";
 
-import {
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 import { ScrollTrigger, useGSAP } from "@/lib/gsap";
 
@@ -26,13 +21,23 @@ import { setupEntryAnimations } from "@/lib/entry-animations-utils";
 
 interface PortfolioContentProps {
   data: PortfolioSectionType[];
+  currentPage: number;
 }
 
-function PortfolioContent({ data }: PortfolioContentProps) {
+function PortfolioContent({ data, currentPage }: PortfolioContentProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
   const { setEntryAnimations } = useTransition();
-  const [currentPage, setCurrentPage] = useState(1);
+  const router = useRouter();
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      router.push(page === 1 ? "/portfolio" : `/portfolio/${page}`, {
+        scroll: false,
+      });
+    },
+    [router],
+  );
 
   // Extract animations from data
   const { entryAnimations, scrollAnimations } = useMemo(() => {
@@ -137,7 +142,7 @@ function PortfolioContent({ data }: PortfolioContentProps) {
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              onPageChange={setCurrentPage}
+              onPageChange={handlePageChange}
             />
           </article>
         );

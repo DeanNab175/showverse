@@ -33,7 +33,13 @@ function ProjectCard({ project }: ProjectCardProps) {
       <div className="grid aspect-3/2 rounded-xl">
         <div className="[grid-area:1/1] bg-primary rounded-sm w-3/5 justify-self-end" />
         <div className="[grid-area:1/1] relative w-[97%] h-[92%] self-center justify-self-start rounded-xl overflow-hidden bg-skills-card shadow-xs">
-          <Image src={thumbnail} alt={title} fill className="object-cover" />
+          <Image
+            src={thumbnail}
+            alt={title}
+            fill
+            sizes="(min-width: 1024px) 33vw, 100vw"
+            className="object-cover"
+          />
           {previewUrlContent}
         </div>
       </div>
