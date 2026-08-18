@@ -4,6 +4,7 @@ const skillsData: SkillsSectionType[] = [
   {
     id: "skills_section",
     name: "skills",
+    type: "skill-categories",
     class: "mb-4",
     content: {
       heading: {
@@ -133,6 +134,7 @@ const skillsData: SkillsSectionType[] = [
   {
     id: "services_section",
     name: "services",
+    type: "service-grid",
     class: "py-6",
     content: {
       heading: {

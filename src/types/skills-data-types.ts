@@ -2,6 +2,8 @@ import type { BaseSectionType } from "./common-types";
 
 export type { HeadingType } from "./common-types";
 
+type SectionType = "skill-categories" | "service-grid";
+
 export type SkillItemType = {
   name: string;
   iconPath: string;
@@ -35,5 +37,6 @@ type SkillsSectionContent = {
 };
 
 export interface SkillsSectionType extends BaseSectionType<SkillsSectionContent> {
+  type: SectionType;
   class?: string;
 }
