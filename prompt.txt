@@ -1,0 +1,47 @@
+Prompt: we need to standardized the data for each page, about, home,portfolio and skills. We need to find a way to make the big array of object share the same structure for all pages. can you generate a plan for how to acheive this in the best way possible and without creating regression on this app?
+
+Response:
+Looked at all four data files, their type definitions, and every component that consumes them. Here's what's actually going on and the plan to fix it.
+
+Current state
+Three of the four are already halfway standardized — about.ts, portfolio.ts, and skills.ts all implement BaseSectionType<TContent> from common-types.ts:10-21: { id, name, wrapperClass?, sectionClass?, content: { wrapperClass?, heading? } & TContent, entryAnimations?, scrollAnimations? }.
+
+home.ts is the actual outlier:
+
+No type file at all — it's just const homeData = [...], untyped.
+Content shape doesn't match the others (greetMessage, name, jobTitle... instead of heading/paragraphs).
+Its animations are hand-written GSAP calls inside home-content.tsx:20-63, not data-driven entryAnimations/scrollAnimations like the other three.
+app/(site)/page.tsx doesn't even pass homeData as a prop — HomeContent imports the constant directly, unlike About/Skills/Portfolio's page.tsx → data={...} pattern.
+There's a second, subtler inconsistency: even where the data shape matches, about-content.tsx, portfolio-content.tsx, and skills-content.tsx each re-implement ~70 identical lines (animation extraction via useMemo/flatMap, the useLayoutEffect for initial ScrollTrigger state, initializeScrollTriggers, the useGSAP setup/cleanup block). And rendering dispatch is inconsistent: About uses a type discriminator ("image-on-left" | "banner") routed through about-section.tsx; Skills/Portfolio instead branch on section.name === "skills" or on which content fields happen to exist.
+
+Plan
+Phase 1 — Bring home.ts into the standard. Create home-data-types.ts with HomeSectionType extends BaseSectionType<HomeSectionContent>. Restructure home.ts to carry wrapperClass/sectionClass/content.heading (optional, fine to omit) and move the animations currently hardcoded in home-content.tsx into entryAnimations/scrollAnimations array entries, same as about.ts. Update page.tsx to pass data={homeData} as a prop. Do this as two commits: first the data/type restructuring (keeping the old hardcoded animation code working off the new shape, since ids/selectors stay the same), then swapping home-content.tsx over to the shared animation-setup utilities — isolates the highest-risk step (animation wiring) from the shape change.
+
+Phase 2 — Extract the duplicated boilerplate into one hook. Once all four data files share the same envelope, the four content components can share one useSectionAnimations(data) hook instead of copy-pasting the extraction/ScrollTrigger/useGSAP block four times. Pure refactor, no behavior change — this is where standardizing the data shape actually pays off in less code.
+
+Phase 3 — Replace name-based branching with a type discriminator. Give Skills/Portfolio sections an explicit type ("project-grid", "skill-categories", "service-grid") and dispatch through one <SectionRenderer> switch, extending the pattern about-section.tsx already has — removing the section.name === "skills" string checks in skills-content.tsx. Add type additively first, flip the branch to check it, confirm nothing changes, only then treat name purely as an id.
+
+Phase 4 (optional). Sanity-check metadata.ts keys line up with the page names — minor, but matters once these become DB rows.
+
+Regression avoidance
+No test suite exists (package.json has only dev/build/start/lint) — this is UI + GSAP-animation-driven, so verification is next build/tsc --noEmit for type safety plus manual visual QA per page after each phase, not automated.
+Land each phase as its own commit — Phase 1 (Home) is the only one with real visual risk; Phases 2–3 are structural refactors that should look pixel-identical.
+The main foot-gun: GSAP selectors are strings (.text-transition, #section-home_intro). Any id/name/class rename in a data file must be grepped against that same file's entryAnimations/scrollAnimations selectors, or you get an animation that silently no-ops.
+Want me to start with Phase 1, or would you rather I draft the exact target shape for home.ts first so you can sign off before I touch anything?
+
+--------------------------
+Phase 1 complete
+Brought home.ts fully into the BaseSectionType standard that About/Portfolio/Skills already used:
+
+common-types.ts: extracted ImageType (previously duplicated privately inside about-data-types.ts) into a shared, exported type.
+about-data-types.ts: now imports the shared ImageType instead of defining its own copy.
+home-data-types.ts (new): HomeSectionType extends BaseSectionType<HomeSectionContent>, matching the shape of AboutSectionType/PortfolioSectionType/SkillsSectionType.
+home.ts: now typed as HomeSectionType[]; dropped the unused type and dead content.image: {} fields; added content.wrapperClass; and — the main change — the GSAP animations that were hardcoded in the component are now entryAnimations/scrollAnimations array entries, same as every other page.
+home-content.tsx: rewritten to take data as a prop (was previously importing the constant directly, the one thing that broke the page→content data-flow convention) and to use the same setupEntryAnimations/setupScrollTriggers/useGSAP plumbing as about-content.tsx/skills-content.tsx/portfolio-content.tsx.
+app/(site)/page.tsx: now passes data={homeData}.
+Verified: tsc --noEmit clean across the project; booted the dev server and drove all four pages (/, /about, /skills, /portfolio) with a headless browser — no console errors, and the homepage's entry animation (text stagger → button → image slide-in from the right) settles into an identical final state to before the refactor. Screenshots confirmed nothing regressed on the other three pages either (the shared ImageType change didn't affect About's rendering).
+
+All four data files now share one envelope. Next up per the plan is Phase 2: extract the ~70 lines of duplicated animation-wiring boilerplate (now identical across all four content components) into one useSectionAnimations hook. Want me to continue with that now, or pause here so you can review/commit Phase 1 first?
+
+---------------------------
+Phase 1 is committed (65b013f). Ready for Phase 2 (extracting the duplicated animation-wiring boilerplate into a shared hook) whenever you want to continue — just say the word.
