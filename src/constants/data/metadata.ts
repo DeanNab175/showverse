@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
-const pagesMetadata: Record<string, Metadata> = {
+type PageKey = "home" | "about" | "portfolio" | "skills" | "contact";
+
+const pagesMetadata: Record<PageKey, Metadata> = {
   home: {
     title: "Home",
     description:
