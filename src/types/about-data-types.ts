@@ -1,23 +1,8 @@
 import type { ButtonVariant } from "@/components/ui/button";
 import type { ExperienceType } from "./experience-types";
-import type {
-  EntryAnimationType,
-  ScrollAnimationType,
-} from "./animations-types";
-import type { BaseSectionType, HeadingType } from "./common-types";
+import type { BaseSectionType, HeadingType, ImageType } from "./common-types";
 
 type SectionType = "image-on-left" | "banner";
-
-type ImageType = {
-  wrapperId?: string;
-  wrapperClass?: string;
-  isIllustration: boolean;
-  illustration: {
-    class?: string;
-    html: string;
-  };
-  path: string;
-};
 
 type ExperienceLayoutType = {
   wrapperClass?: string;

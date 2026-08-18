@@ -1,8 +1,9 @@
-const homeData = [
+import type { HomeSectionType } from "@/types/home-data-types";
+
+const homeData: HomeSectionType[] = [
   {
     id: "home_intro_section",
     name: "home_intro",
-    type: "image-on-right",
     wrapperClass: "",
     sectionClass: "",
     image: {
@@ -16,6 +17,7 @@ const homeData = [
       path: "/about-portfolio.jpg",
     },
     content: {
+      wrapperClass: "content",
       greetMessage: "Hello I'm",
       name: "Donald Smith",
       jobTitle: "Freelance Web & UI/\nUX Designer",
@@ -27,8 +29,39 @@ const homeData = [
           text: "View Portfolio",
         },
       ],
-      image: {},
     },
+    entryAnimations: [
+      {
+        selector: ".home-text",
+        animation: {
+          opacity: 0,
+          y: 16,
+          duration: 0.3,
+          ease: "power2.out",
+        },
+        stagger: 0.15,
+      },
+      {
+        selector: ".button-link",
+        animation: {
+          y: 16,
+          opacity: 0,
+          duration: 0.3,
+          ease: "power2.out",
+        },
+      },
+      {
+        selector: "#home-image",
+        animation: {
+          opacity: 0,
+          xPercent: 100,
+          duration: 0.5,
+          ease: "circ.out",
+        },
+        position: "<",
+      },
+    ],
+    scrollAnimations: [],
   },
 ];
 
