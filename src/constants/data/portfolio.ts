@@ -99,19 +99,64 @@ const portfolioData: PortfolioSectionType[] = [
           ease: "power2.out",
         },
       },
+    ],
+    scrollAnimations: [
       {
-        selector: ".project-item",
+        selector: ".project-item__image-container",
         animation: {
-          opacity: 0,
-          y: 20,
-          duration: 0.3,
-          ease: "power2.out",
+          from: { opacity: 0, y: 24, rotate: 20 },
+          to: {
+            opacity: 1,
+            y: 0,
+            rotate: 0,
+            duration: 0.4,
+            ease: "power2.out",
+          },
+        },
+        scrollTrigger: {
+          start: "75% bottom",
+          toggleActions: "play none none none",
         },
         stagger: 0.15,
-        position: "<",
+      },
+      {
+        selector: ".project-item__accent-shape",
+        animation: {
+          from: { opacity: 0, x: 100, scale: 0.6 },
+          to: {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            duration: 0.3,
+            delay: 0.5,
+            ease: "power2.out",
+          },
+        },
+        scrollTrigger: {
+          start: "75% bottom",
+          toggleActions: "play none none none",
+        },
+        stagger: 0.15,
+      },
+      {
+        selector: ".project-item__heading, .project-item__details",
+        animation: {
+          from: { opacity: 0, y: 16 },
+          to: {
+            opacity: 1,
+            y: 0,
+            duration: 0.3,
+            delay: 0.25,
+            ease: "power2.out",
+          },
+        },
+        scrollTrigger: {
+          start: "75% bottom",
+          toggleActions: "play none none none",
+        },
+        stagger: 0.075,
       },
     ],
-    scrollAnimations: [],
   },
 ];
 

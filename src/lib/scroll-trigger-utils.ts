@@ -47,9 +47,12 @@ export function setupScrollTriggers({
           },
         });
 
+        const staggerDelay = stagger ? index * stagger : 0;
+        const baseDelay = (animation.to.delay as number | undefined) ?? 0;
+
         tl.to(element, {
           ...animation.to,
-          delay: stagger ? index * stagger : animation.to.delay,
+          delay: staggerDelay + baseDelay,
         });
 
         // Store the trigger for cleanup

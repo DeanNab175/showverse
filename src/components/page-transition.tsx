@@ -17,10 +17,13 @@ interface PageTransitionProps {
 export default function PageTransition({ children }: PageTransitionProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { getEntryAnimations, setEntryAnimations } = useTransition();
+  const {
+    getEntryAnimations,
+    setEntryAnimations,
+    isTransitioning,
+    hasPlayedInitial,
+  } = useTransition();
   const overlayRef = useRef<HTMLDivElement | null>(null);
-  const isTransitioning = useRef(false);
-  const hasPlayedInitial = useRef(false);
   const previousPathname = useRef<string | null>(null);
 
   const playEntryAnimation = useCallback(() => {

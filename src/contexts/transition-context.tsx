@@ -6,6 +6,8 @@ import { AnimationFn } from "@/types/animations-types";
 interface TransitionContextType {
   setEntryAnimations: (fn: AnimationFn) => void;
   getEntryAnimations: () => AnimationFn;
+  isTransitioning: React.RefObject<boolean>;
+  hasPlayedInitial: React.RefObject<boolean>;
 }
 
 const TransitionContext = createContext<TransitionContextType | undefined>(
@@ -18,6 +20,8 @@ export default function TransitionProvider({
   children: React.ReactNode;
 }) {
   const entryAnimations = useRef<AnimationFn>(null);
+  const isTransitioning = useRef(false);
+  const hasPlayedInitial = useRef(false);
   return (
     <TransitionContext
       value={{
@@ -25,6 +29,8 @@ export default function TransitionProvider({
           entryAnimations.current = fn;
         },
         getEntryAnimations: () => entryAnimations.current,
+        isTransitioning,
+        hasPlayedInitial,
       }}
     >
       {children}

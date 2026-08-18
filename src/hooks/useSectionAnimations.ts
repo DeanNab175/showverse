@@ -21,7 +21,8 @@ import type { BaseSectionType } from "@/types/common-types";
 export function useSectionAnimations<T extends BaseSectionType>(data: T[]) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
-  const { setEntryAnimations } = useTransition();
+  const { setEntryAnimations, isTransitioning, hasPlayedInitial } =
+    useTransition();
 
   const { entryAnimations, scrollAnimations } = useMemo(() => {
     return {
@@ -56,25 +57,47 @@ export function useSectionAnimations<T extends BaseSectionType>(data: T[]) {
         typeof window !== "undefined" &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+      const armScrollTriggers = () => {
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh();
+          initializeScrollTriggers();
+        });
+      };
+
+      // Mirrors PageTransition's own gate for whether it will actually call
+      // playEntryAnimation() for this render: either it hasn't played its
+      // very first entry yet, or a nav-link transition is in flight.
+      const willPlayEntryTimeline =
+        !hasPlayedInitial.current || isTransitioning.current;
+
       if (prefersReducedMotion) {
         setEntryAnimations(null);
-        return;
+      } else {
+        setEntryAnimations((tl) => {
+          setupEntryAnimations({
+            entryAnimations,
+            timeline: tl,
+            scopeRef: sectionRef,
+          });
+
+          // When the entry timeline is about to play, PageTransition's
+          // shared .page-content fade still has it sitting at opacity 0 at
+          // this point, so arming ScrollTriggers now would let above-the-
+          // fold elements finish their reveal while still hidden. Wait for
+          // that timeline to actually finish instead.
+          if (willPlayEntryTimeline) {
+            tl.call(armScrollTriggers);
+          }
+        });
       }
 
-      setEntryAnimations((tl) => {
-        setupEntryAnimations({
-          entryAnimations,
-          timeline: tl,
-          scopeRef: sectionRef,
-          onComplete: () => {
-            // Setup ScrollTriggers after entry animations complete
-            requestAnimationFrame(() => {
-              ScrollTrigger.refresh();
-              initializeScrollTriggers();
-            });
-          },
-        });
-      });
+      // Content-only updates that don't go through PageTransition's
+      // nav-link flow (e.g. portfolio pagination via router.push) never
+      // play the entry timeline above, so arm directly here too — content
+      // is already visible in that case, no reveal to race against.
+      if (!willPlayEntryTimeline) {
+        armScrollTriggers();
+      }
 
       // Cleanup function
       return () => {

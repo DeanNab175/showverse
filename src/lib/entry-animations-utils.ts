@@ -5,7 +5,6 @@ interface SetupEntryAnimationsOptions {
   entryAnimations: EntryAnimationType[];
   timeline: gsap.core.Timeline;
   scopeRef: React.RefObject<HTMLElement | null>;
-  onComplete?: () => void;
 }
 
 /**
@@ -16,7 +15,6 @@ export function setupEntryAnimations({
   entryAnimations,
   timeline,
   scopeRef,
-  onComplete,
 }: SetupEntryAnimationsOptions): void {
   if (!scopeRef.current) return;
 
@@ -37,9 +35,4 @@ export function setupEntryAnimations({
       timeline.from(elements, animationConfig);
     }
   });
-
-  // Add completion callback if provided
-  if (onComplete) {
-    timeline.call(onComplete);
-  }
 }

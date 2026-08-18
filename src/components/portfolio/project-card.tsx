@@ -31,8 +31,8 @@ function ProjectCard({ project }: ProjectCardProps) {
   return (
     <article className="project-item">
       <div className="grid aspect-3/2 rounded-xl">
-        <div className="[grid-area:1/1] bg-primary rounded-sm w-3/5 justify-self-end" />
-        <div className="[grid-area:1/1] relative w-[97%] h-[92%] self-center justify-self-start rounded-xl overflow-hidden bg-skills-card shadow-xs">
+        <div className="[grid-area:1/1] project-item__accent-shape bg-primary rounded-sm w-3/5 justify-self-end" />
+        <div className="[grid-area:1/1] project-item__image-container relative w-[97%] h-[92%] self-center justify-self-start rounded-xl overflow-hidden bg-skills-card shadow-xs">
           <Image
             src={thumbnail}
             alt={title}
@@ -44,8 +44,8 @@ function ProjectCard({ project }: ProjectCardProps) {
         </div>
       </div>
 
-      <h3 className="font-medium text-base mt-4 mb-1">{title}</h3>
-      <p className="text-sm font-normal">{description}</p>
+      <h3 className="project-item__heading font-medium text-base mt-4 mb-1">{title}</h3>
+      <p className="project-item__details text-sm font-normal">{description}</p>
     </article>
   );
 }
