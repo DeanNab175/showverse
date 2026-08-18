@@ -12,7 +12,7 @@ const portfolioData: PortfolioSectionType[] = [
         class: "text-transition text-xl mb-4 font-medium",
       },
       projects: {
-        wrapperClass: "grid grid-cols-1 lg:grid-cols-3 gap-x-10 gap-y-8",
+        wrapperClass: "grid grid-cols-1 lg:grid-cols-3 gap-x-14 gap-y-8",
         perPage: 6,
         list: [
           {

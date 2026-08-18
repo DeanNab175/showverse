@@ -19,34 +19,36 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
         aria-label="Previous page"
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
-        className="flex items-center justify-center size-9 rounded-md text-body-txt disabled:opacity-40 disabled:cursor-not-allowed hover:text-primary transition-colors"
+        className="flex items-center justify-center size-6 rounded-[5px] text-body-txt disabled:opacity-40 disabled:cursor-not-allowed hover:text-primary transition-colors"
       >
         <ArrowIcon />
       </button>
 
-      {pages.map((page) => (
-        <button
-          key={page}
-          type="button"
-          aria-label={`Go to page ${page}`}
-          aria-current={page === currentPage}
-          onClick={() => onPageChange(page)}
-          className={`flex items-center justify-center size-9 rounded-md text-xs-plus font-medium transition-colors ${
-            page === currentPage
-              ? "bg-primary text-button-primary-txt"
-              : "text-body-txt hover:bg-skills-card"
-          }`}
-        >
-          {page}
-        </button>
-      ))}
+      <div className="flex items-center gap-1">
+        {pages.map((page) => (
+          <button
+            key={page}
+            type="button"
+            aria-label={`Go to page ${page}`}
+            aria-current={page === currentPage}
+            onClick={() => onPageChange(page)}
+            className={`flex items-center justify-center size-6 rounded-[5px] text-xs font-medium transition-colors ${
+              page === currentPage
+                ? "bg-primary text-button-primary-txt"
+                : "text-body-txt hover:bg-skills-card"
+            }`}
+          >
+            {page}
+          </button>
+        ))}
+      </div>
 
       <button
         type="button"
         aria-label="Next page"
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
-        className="flex items-center justify-center size-9 rounded-md text-body-txt disabled:opacity-40 disabled:cursor-not-allowed hover:text-primary transition-colors"
+        className="flex items-center justify-center size-6 rounded-[5px] text-body-txt disabled:opacity-40 disabled:cursor-not-allowed hover:text-primary transition-colors"
       >
         <ArrowIcon className="rotate-180" />
       </button>
@@ -57,8 +59,8 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
 function ArrowIcon({ className }: { className?: string }) {
   return (
     <svg
-      width="18"
-      height="18"
+      width="14"
+      height="14"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
