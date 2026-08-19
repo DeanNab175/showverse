@@ -114,7 +114,7 @@ const portfolioData: PortfolioSectionType[] = [
           },
         },
         scrollTrigger: {
-          start: "75% bottom",
+          start: "top bottom",
           toggleActions: "play none none none",
         },
         stagger: 0.15,
@@ -133,7 +133,7 @@ const portfolioData: PortfolioSectionType[] = [
           },
         },
         scrollTrigger: {
-          start: "75% bottom",
+          start: "top bottom",
           toggleActions: "play none none none",
         },
         stagger: 0.15,
@@ -151,7 +151,7 @@ const portfolioData: PortfolioSectionType[] = [
           },
         },
         scrollTrigger: {
-          start: "75% bottom",
+          start: "top bottom",
           toggleActions: "play none none none",
         },
         stagger: 0.075,

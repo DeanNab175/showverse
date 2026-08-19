@@ -4,7 +4,11 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationProps) {
   if (totalPages <= 1) return null;
 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -12,19 +16,19 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
   return (
     <nav
       aria-label="Portfolio pagination"
-      className="flex items-center justify-center gap-3 mt-10"
+      className="sticky bottom-0 flex justify-center mt-10 py-3"
     >
-      <button
-        type="button"
-        aria-label="Previous page"
-        disabled={currentPage === 1}
-        onClick={() => onPageChange(currentPage - 1)}
-        className="flex items-center justify-center size-6 rounded-[5px] text-body-txt disabled:opacity-40 disabled:cursor-not-allowed hover:text-primary transition-colors"
-      >
-        <ArrowIcon />
-      </button>
+      <div className="flex items-center gap-1 rounded-full bg-surface-bg/85 px-2 py-2">
+        <button
+          type="button"
+          aria-label="Previous page"
+          disabled={currentPage === 1}
+          onClick={() => onPageChange(currentPage - 1)}
+          className="flex items-center justify-center size-8 rounded-full text-body-txt disabled:opacity-40 disabled:cursor-not-allowed hover:text-primary transition-colors"
+        >
+          <ArrowIcon />
+        </button>
 
-      <div className="flex items-center gap-1">
         {pages.map((page) => (
           <button
             key={page}
@@ -32,7 +36,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
             aria-label={`Go to page ${page}`}
             aria-current={page === currentPage}
             onClick={() => onPageChange(page)}
-            className={`flex items-center justify-center size-6 rounded-[5px] text-xs font-medium transition-colors ${
+            className={`flex items-center justify-center size-8 rounded-lg text-sm font-medium transition-colors ${
               page === currentPage
                 ? "bg-primary text-button-primary-txt"
                 : "text-body-txt hover:bg-skills-card"
@@ -41,17 +45,17 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
             {page}
           </button>
         ))}
-      </div>
 
-      <button
-        type="button"
-        aria-label="Next page"
-        disabled={currentPage === totalPages}
-        onClick={() => onPageChange(currentPage + 1)}
-        className="flex items-center justify-center size-6 rounded-[5px] text-body-txt disabled:opacity-40 disabled:cursor-not-allowed hover:text-primary transition-colors"
-      >
-        <ArrowIcon className="rotate-180" />
-      </button>
+        <button
+          type="button"
+          aria-label="Next page"
+          disabled={currentPage === totalPages}
+          onClick={() => onPageChange(currentPage + 1)}
+          className="flex items-center justify-center size-8 rounded-full text-body-txt disabled:opacity-40 disabled:cursor-not-allowed hover:text-primary transition-colors"
+        >
+          <ArrowIcon className="rotate-180" />
+        </button>
+      </div>
     </nav>
   );
 }
