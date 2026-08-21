@@ -90,7 +90,7 @@ function ScrollHint({ scrollerRef }: ScrollHintProps) {
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
-      <span className="flex items-center justify-center size-9.5 rounded-full bg-primary text-button-primary-txt animate-bounce">
+      <span className="flex items-center justify-center size-9.5 rounded-full bg-primary/85 text-button-primary-txt animate-bounce">
         <i className="icon-arrow-down text-[1em]" />
       </span>
     </div>
