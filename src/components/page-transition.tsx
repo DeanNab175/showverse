@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { useTransition } from "@/contexts/transition-context";
-import { gsap } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 import PageLayout from "./page-layout/page-layout";
 import {
   createEntryTimeline,
@@ -35,16 +35,19 @@ export default function PageTransition({ children }: PageTransitionProps) {
     // for content-only updates like portfolio pagination, which bypass this
     // entry timeline entirely - see usePageTransitionLinks/useSectionAnimations.
     //
-    // Reset via gsap.set rather than the native scrollTo/scrollTop: this
-    // scroller is also driven by ScrollTrigger, which caches scroll position
-    // internally for performance. A native scroll write bypasses that cache,
-    // so a later ScrollTrigger.refresh() (fired when the new page arms its
-    // scroll triggers) reads its own stale cached value and "restores" the
-    // old scroll position right back, undoing the reset. Setting through
-    // gsap keeps that cache in sync.
+    // ScrollTrigger caches this scroller's position internally and restores
+    // that cache on its own auto-refresh (e.g. triggered later by images -
+    // Skills' many icon SVGs - loading and shifting layout), which silently
+    // overwrites a plain scroll write with a stale pre-navigation value.
+    // A plain gsap.set({scrollTop}) doesn't help either: it treats scrollTop
+    // as a generic property, bypassing ScrollTrigger's own scroller proxy
+    // entirely. Calling ScrollTrigger.refresh() right after the native write
+    // forces it to adopt 0 as the current baseline instead.
     const resetScroll = () => {
       const scroller = document.querySelector("main.page-content");
-      if (scroller) gsap.set(scroller, { scrollTop: 0 });
+      if (!scroller) return;
+      scroller.scrollTo({ top: 0, behavior: "instant" });
+      ScrollTrigger.refresh();
     };
 
     resetScroll();
