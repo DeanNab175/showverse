@@ -13,3 +13,12 @@ model AdminUser {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+model NavbarLink {
+  id                String @id @default(cuid())
+  name              String
+  href              String
+  iconClass         String
+  iconFontSizeClass String?
+  sortOrder         Int
+}

@@ -1,36 +1,35 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-function AdminLoginPage() {
-  const router = useRouter();
+function LoginForm() {
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const error = searchParams.get("error");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
     setIsSubmitting(true);
 
-    const result = await signIn("credentials", {
+    // Let NextAuth drive the redirect itself (default `redirect: true`)
+    // rather than a manual redirect:false + router.push: that split the
+    // sign-in from the navigation into two separate requests, and the
+    // session cookie from the first wasn't reliably attached to the
+    // second yet, occasionally bouncing straight back to this page.
+    // A server-driven redirect is part of the same response chain, so
+    // the cookie is guaranteed to be set before the next page loads.
+    await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      callbackUrl: "/admin",
     });
 
     setIsSubmitting(false);
-
-    if (result?.error) {
-      setError("Invalid email or password.");
-      return;
-    }
-
-    router.push("/admin");
-    router.refresh();
   };
 
   return (
@@ -63,7 +62,9 @@ function AdminLoginPage() {
           />
         </label>
 
-        {error && <p className="text-sm text-destructive">{error}</p>}
+        {error && (
+          <p className="text-sm text-destructive">Invalid email or password.</p>
+        )}
 
         <button
           type="submit"
@@ -74,6 +75,14 @@ function AdminLoginPage() {
         </button>
       </form>
     </div>
+  );
+}
+
+function AdminLoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }
 

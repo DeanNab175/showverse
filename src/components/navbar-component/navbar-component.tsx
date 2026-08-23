@@ -7,9 +7,19 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useMediaQuery } from "react-responsive";
 
-import navbarLinks from "@/constants/navbar-links";
+export interface NavbarLinkItem {
+  id: string;
+  name: string;
+  href: string;
+  iconClass: string;
+  iconFontSizeClass: string | null;
+}
 
-function NavbarComponent() {
+interface NavbarComponentProps {
+  links: NavbarLinkItem[];
+}
+
+function NavbarComponent({ links }: NavbarComponentProps) {
   const pathname = usePathname();
   const navIndicatorRef = useRef<HTMLDivElement | null>(null);
   const hasInitialized = useRef(false);
@@ -71,7 +81,7 @@ function NavbarComponent() {
       ></div>
 
       <ul className="flex flex-row lg:flex-col gap-7">
-        {navbarLinks.map((link) => {
+        {links.map((link) => {
           const isActiveLink = pathname === link.href;
 
           return (
