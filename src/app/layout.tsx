@@ -5,6 +5,7 @@ import { M_PLUS_Rounded_1c } from "next/font/google";
 
 import NavbarComponent from "@/components/navbar-component/navbar-component";
 import { Providers } from "@/components/providers";
+import { prisma } from "@/lib/prisma";
 
 const mPlusRounded = M_PLUS_Rounded_1c({
   variable: "--font-m-plus-rounded",
@@ -26,7 +27,13 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
+export default async function RootLayout({
+  children,
+}: Readonly<RootLayoutProps>) {
+  const navbarLinks = await prisma.navbarLink.findMany({
+    orderBy: { sortOrder: "asc" },
+  });
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -52,7 +59,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
           <main className="container mx-auto px-3 flex items-center min-h-dvh">
             <div className="grid gap-4 w-full h-[85vh] tall:h-[1040px] grid-rows-[1fr_auto] lg:grid-rows-none lg:grid-cols-9 xl:grid-cols-12">
               <div className="lg:col-start-1 lg:col-end-2">
-                <NavbarComponent />
+                <NavbarComponent links={navbarLinks} />
               </div>
               <div className="row-start-1 lg:col-start-2 lg:-col-end-1 h-[inherit]">
                 <section className="h-full">{children}</section>

@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 
-import { auth, signOut } from "@/lib/auth";
+import { auth } from "@/lib/auth";
+
+import SignOutButton from "./sign-out-button";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -17,16 +19,7 @@ async function AdminLayout({ children }: AdminLayoutProps) {
     <div className="min-h-dvh bg-page-bg text-body-txt">
       <header className="flex items-center justify-between px-6 py-4 border-b border-body-txt/10">
         <span className="font-medium">ShowVerse Admin</span>
-        <form
-          action={async () => {
-            "use server";
-            await signOut({ redirectTo: "/admin/login" });
-          }}
-        >
-          <button type="submit" className="text-sm hover:text-primary">
-            Sign out
-          </button>
-        </form>
+        <SignOutButton />
       </header>
       <main className="p-6">{children}</main>
     </div>
