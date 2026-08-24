@@ -3,19 +3,19 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import DeleteButton from "@/components/admin/delete-button";
 
-import { deleteNavbarLink } from "./actions";
+import { deleteSocialLink } from "./actions";
 
-async function NavbarLinksPage() {
-  const links = await prisma.navbarLink.findMany({
+async function SocialLinksPage() {
+  const links = await prisma.socialMediaLink.findMany({
     orderBy: { sortOrder: "asc" },
   });
 
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-lg font-medium">Navbar links</h1>
+        <h1 className="text-lg font-medium">Social links</h1>
         <Link
-          href="/admin/navbar/new"
+          href="/admin/social-links/new"
           className="rounded-lg bg-primary text-button-primary-txt px-4 py-2 text-sm font-medium"
         >
           Add link
@@ -35,24 +35,24 @@ async function NavbarLinksPage() {
             </div>
             <div className="flex items-center gap-4">
               <Link
-                href={`/admin/navbar/${link.id}`}
+                href={`/admin/social-links/${link.id}`}
                 className="text-sm hover:text-primary"
               >
                 Edit
               </Link>
               <DeleteButton
-                action={deleteNavbarLink.bind(null, link.id)}
+                action={deleteSocialLink.bind(null, link.id)}
                 confirmMessage={`Delete "${link.name}"?`}
               />
             </div>
           </div>
         ))}
         {links.length === 0 && (
-          <p className="text-sm text-body-txt/60">No navbar links yet.</p>
+          <p className="text-sm text-body-txt/60">No social links yet.</p>
         )}
       </div>
     </div>
   );
 }
 
-export default NavbarLinksPage;
+export default SocialLinksPage;

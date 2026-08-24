@@ -1,10 +1,18 @@
-function FooterContact() {
+import { prisma } from "@/lib/prisma";
+
+async function FooterContact() {
+  const settings = await prisma.siteSettings.findUnique({
+    where: { id: "singleton" },
+  });
+
+  if (!settings?.contactEmail) return null;
+
   return (
     <p className="footer-contact flex items-center">
       <span className="text-sm">
         <i className="icon-mail"></i>
       </span>
-      <span className="ml-2 mb-0.5 text-xs">dsmith@gmail.com</span>
+      <span className="ml-2 mb-0.5 text-xs">{settings.contactEmail}</span>
     </p>
   );
 }

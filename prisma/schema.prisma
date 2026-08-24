@@ -22,3 +22,17 @@ model NavbarLink {
   iconFontSizeClass String?
   sortOrder         Int
 }
+
+model SocialMediaLink {
+  id              String  @id @default(cuid())
+  name            String
+  href            String
+  iconClass       String
+  hoverColorClass String?
+  sortOrder       Int
+}
+
+model SiteSettings {
+  id           String  @id @default("singleton")
+  contactEmail String?
+}
