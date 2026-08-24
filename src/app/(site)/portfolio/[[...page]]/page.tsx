@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 
 import PortfolioContent from "@/components/contents/portfolio-content";
-import pagesMetadata from "@/constants/data/metadata";
+import { getPageMetadata } from "@/lib/get-page-metadata";
 import portfolioData from "@/constants/data/portfolio";
 
-export const metadata = pagesMetadata.portfolio;
+export async function generateMetadata() {
+  return getPageMetadata("portfolio");
+}
 
 function getTotalPages() {
   return Math.max(

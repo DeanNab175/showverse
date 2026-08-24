@@ -36,3 +36,10 @@ model SiteSettings {
   id           String  @id @default("singleton")
   contactEmail String?
 }
+
+model PageMetadata {
+  id          String @id @default(cuid())
+  pageKey     String @unique // "home" | "about" | "portfolio" | "skills" | "contact"
+  title       String
+  description String @db.Text
+}

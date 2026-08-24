@@ -6,6 +6,7 @@ import "dotenv/config";
 import { prisma } from "../src/lib/prisma";
 import navbarLinks from "../src/constants/navbar-links";
 import socialMediaLinks from "../src/constants/social-media-links";
+import pagesMetadata from "../src/constants/data/metadata";
 
 async function seedNavbarLinks() {
   const count = await prisma.navbarLink.count();
@@ -48,10 +49,25 @@ async function seedSiteSettings() {
   console.log("Seeded site settings.");
 }
 
+async function seedPageMetadata() {
+  const count = await prisma.pageMetadata.count();
+  if (count > 0) return;
+
+  await prisma.pageMetadata.createMany({
+    data: Object.entries(pagesMetadata).map(([pageKey, meta]) => ({
+      pageKey,
+      title: String(meta.title ?? ""),
+      description: String(meta.description ?? ""),
+    })),
+  });
+  console.log(`Seeded ${Object.keys(pagesMetadata).length} page metadata rows.`);
+}
+
 async function main() {
   await seedNavbarLinks();
   await seedSocialMediaLinks();
   await seedSiteSettings();
+  await seedPageMetadata();
 }
 
 main()
