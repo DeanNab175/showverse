@@ -92,3 +92,41 @@ model Project {
   previewUrl         String?
   sortOrder          Int
 }
+
+model SkillsCategoriesSection {
+  id               String @id @default("skills_categories_singleton")
+  sectionClass     String?
+  headingText      String?
+  headingLevel     Int?
+  headingClass     String?
+  entryAnimations  Json
+  scrollAnimations Json
+
+  categories SkillCategory[]
+}
+
+model SkillCategory {
+  id                        String @id @default(cuid())
+  skillsCategoriesSectionId String
+  section    SkillsCategoriesSection @relation(fields: [skillsCategoriesSectionId], references: [id], onDelete: Cascade)
+  // Rendered as this element's literal DOM id - the section's
+  // entryAnimations selectors (e.g. "#web-developer-category .category-item")
+  // target it directly, so renaming this can break those without a
+  // matching edit to the animation JSON.
+  slug               String  @unique
+  labelText          String
+  labelClass         String?
+  itemsWrapperClass  String?
+  sortOrder          Int
+
+  items SkillItem[]
+}
+
+model SkillItem {
+  id              String @id @default(cuid())
+  skillCategoryId String
+  category        SkillCategory @relation(fields: [skillCategoryId], references: [id], onDelete: Cascade)
+  name            String
+  iconUrl         String
+  sortOrder       Int
+}

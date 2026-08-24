@@ -136,6 +136,48 @@ async function seedPortfolio() {
   console.log(`Seeded portfolio section with ${projects.length} projects.`);
 }
 
+async function seedSkillCategories() {
+  const existing = await prisma.skillsCategoriesSection.findUnique({
+    where: { id: "skills_categories_singleton" },
+  });
+  if (existing) return;
+
+  const section = skillsData.find((s) => s.id === "skills_section");
+  const categories = section?.content.categories ?? [];
+  const heading = section?.content.heading;
+
+  await prisma.skillsCategoriesSection.create({
+    data: {
+      id: "skills_categories_singleton",
+      sectionClass: section?.class ?? null,
+      headingText: heading?.text ?? null,
+      headingLevel: heading?.level ?? null,
+      headingClass: heading?.class ?? null,
+      entryAnimations: JSON.parse(JSON.stringify(section?.entryAnimations ?? [])),
+      scrollAnimations: JSON.parse(JSON.stringify(section?.scrollAnimations ?? [])),
+      categories: {
+        create: categories.map((category, index) => ({
+          slug: category.id,
+          labelText: category.label.text,
+          labelClass: category.label.class ?? null,
+          itemsWrapperClass: category.items.wrapperClass ?? null,
+          sortOrder: index,
+          items: {
+            create: category.items.list.map((item, itemIndex) => ({
+              name: item.name,
+              iconUrl: item.iconPath,
+              sortOrder: itemIndex,
+            })),
+          },
+        })),
+      },
+    },
+  });
+  console.log(
+    `Seeded skill categories section with ${categories.length} categories.`
+  );
+}
+
 async function main() {
   await seedNavbarLinks();
   await seedSocialMediaLinks();
@@ -143,6 +185,7 @@ async function main() {
   await seedPageMetadata();
   await seedServices();
   await seedPortfolio();
+  await seedSkillCategories();
 }
 
 main()
