@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 
 import { renderWithLineBreaks } from "@/lib/render-with-line-breaks";
@@ -56,12 +57,19 @@ function HomeContent({ data }: HomeContentProps) {
               </div>
             </article>
             <article id={image?.wrapperId} className={image?.wrapperClass}>
-              {image?.isIllustration && image?.illustration?.html && (
+              {image?.isIllustration && image?.illustration?.html ? (
                 <IllustrationComponent
                   svgString={image.illustration.html}
                   className={image.illustration.class}
                 />
-              )}
+              ) : image?.path ? (
+                <Image
+                  src={image.path}
+                  alt={content.name}
+                  width={500}
+                  height={500}
+                />
+              ) : null}
             </article>
           </section>
         );
