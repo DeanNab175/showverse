@@ -30,6 +30,11 @@ function AdminDashboardPage() {
             Services
           </Link>
         </li>
+        <li>
+          <Link href="/admin/portfolio" className="hover:text-primary">
+            Portfolio
+          </Link>
+        </li>
       </ul>
     </div>
   );

@@ -8,6 +8,7 @@ import navbarLinks from "../src/constants/navbar-links";
 import socialMediaLinks from "../src/constants/social-media-links";
 import pagesMetadata from "../src/constants/data/metadata";
 import skillsData from "../src/constants/data/skills";
+import portfolioData from "../src/constants/data/portfolio";
 
 async function seedNavbarLinks() {
   const count = await prisma.navbarLink.count();
@@ -97,12 +98,51 @@ async function seedServices() {
   console.log(`Seeded services section with ${services.length} services.`);
 }
 
+async function seedPortfolio() {
+  const existing = await prisma.portfolioSection.findUnique({
+    where: { id: "portfolio_singleton" },
+  });
+  if (existing) return;
+
+  const section = portfolioData[0];
+  const projects = section?.content.projects?.list ?? [];
+  const heading = section?.content.heading;
+
+  await prisma.portfolioSection.create({
+    data: {
+      id: "portfolio_singleton",
+      sectionClass: section?.class ?? null,
+      headingText: heading?.text ?? null,
+      headingLevel: heading?.level ?? null,
+      headingClass: heading?.class ?? null,
+      projectsWrapperClass: section?.content.projects?.wrapperClass ?? null,
+      perPage: section?.content.projects?.perPage ?? 6,
+      entryAnimations: JSON.parse(JSON.stringify(section?.entryAnimations ?? [])),
+      scrollAnimations: JSON.parse(JSON.stringify(section?.scrollAnimations ?? [])),
+      projects: {
+        // Images stay as their existing /public paths for now - the Blobs
+        // pipeline only touches an image once an admin re-uploads it.
+        create: projects.map((project, index) => ({
+          slug: project.id,
+          title: project.title,
+          description: project.description,
+          thumbnailUrl: project.thumbnail,
+          previewUrl: project.previewUrl ?? null,
+          sortOrder: index,
+        })),
+      },
+    },
+  });
+  console.log(`Seeded portfolio section with ${projects.length} projects.`);
+}
+
 async function main() {
   await seedNavbarLinks();
   await seedSocialMediaLinks();
   await seedSiteSettings();
   await seedPageMetadata();
   await seedServices();
+  await seedPortfolio();
 }
 
 main()

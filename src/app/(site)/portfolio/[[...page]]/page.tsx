@@ -2,13 +2,14 @@ import { notFound } from "next/navigation";
 
 import PortfolioContent from "@/components/contents/portfolio-content";
 import { getPageMetadata } from "@/lib/get-page-metadata";
-import portfolioData from "@/constants/data/portfolio";
+import { prisma } from "@/lib/prisma";
+import { mapPortfolioSection } from "@/lib/mappers/portfolio-mapper";
 
 export async function generateMetadata() {
   return getPageMetadata("portfolio");
 }
 
-function getTotalPages() {
+function getTotalPages(portfolioData: ReturnType<typeof mapPortfolioSection>[]) {
   return Math.max(
     1,
     ...portfolioData
@@ -30,7 +31,14 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
   if (pageSegments && pageSegments.length > 1) notFound();
 
   const page = pageSegments ? Number(pageSegments[0]) : 1;
-  const totalPages = getTotalPages();
+
+  const row = await prisma.portfolioSection.findUnique({
+    where: { id: "portfolio_singleton" },
+    include: { projects: { orderBy: { sortOrder: "asc" } } },
+  });
+  const portfolioData = [mapPortfolioSection(row)];
+
+  const totalPages = getTotalPages(portfolioData);
 
   if (!Number.isInteger(page) || page < 1 || page > totalPages) notFound();
 
