@@ -10,6 +10,7 @@ import pagesMetadata from "../src/constants/data/metadata";
 import skillsData from "../src/constants/data/skills";
 import portfolioData from "../src/constants/data/portfolio";
 import homeData from "../src/constants/data/home";
+import aboutData from "../src/constants/data/about";
 
 async function seedNavbarLinks() {
   const count = await prisma.navbarLink.count();
@@ -219,6 +220,107 @@ async function seedHomeSection() {
   console.log("Seeded home section.");
 }
 
+async function seedAboutIntroSection() {
+  const existing = await prisma.aboutIntroSection.findUnique({
+    where: { id: "about_intro_singleton" },
+  });
+  if (existing) return;
+
+  const section = aboutData.find((s) => s.id === "about_intro_section");
+  if (!section) return;
+
+  const content = section.content;
+  const image = section.image;
+  const experiences = content.experiences?.list ?? [];
+  const hobbies = content.hobby?.list ?? [];
+
+  await prisma.aboutIntroSection.create({
+    data: {
+      id: "about_intro_singleton",
+      wrapperClass: section.wrapperClass ?? null,
+      sectionClass: section.sectionClass ?? null,
+      contentWrapperClass: content.wrapperClass ?? null,
+      headingText: content.heading?.text ?? null,
+      headingLevel: content.heading?.level ?? null,
+      headingClass: content.heading?.class ?? null,
+      paragraphsBody: content.paragraphs?.body ?? [],
+      paragraphsClass: content.paragraphs?.class ?? null,
+      experiencesWrapperClass: content.experiences?.wrapperClass ?? null,
+      hobbyHeadingText: content.hobby?.heading?.text ?? null,
+      hobbyHeadingLevel: content.hobby?.heading?.level ?? null,
+      hobbyHeadingClass: content.hobby?.heading?.class ?? null,
+      ctaLabel: content.cta?.label ?? null,
+      ctaVariant: content.cta?.variant ?? null,
+      ctaIconClass: content.cta?.iconClass ?? null,
+      ctaWrapperClass: content.cta?.wrapperClass ?? null,
+      entryAnimations: JSON.parse(JSON.stringify(section.entryAnimations ?? [])),
+      scrollAnimations: JSON.parse(JSON.stringify(section.scrollAnimations ?? [])),
+      image: image
+        ? {
+            create: {
+              wrapperId: image.wrapperId ?? null,
+              wrapperClass: image.wrapperClass ?? null,
+              isIllustration: image.isIllustration ?? false,
+              illustrationHtml: image.illustration?.html ?? null,
+              illustrationClass: image.illustration?.class ?? null,
+              path: image.path,
+            },
+          }
+        : undefined,
+      experiences: {
+        create: experiences.map((experience, index) => ({
+          total: experience.total,
+          description: experience.description,
+          sortOrder: index,
+        })),
+      },
+      hobbies: {
+        create: hobbies.map((hobby, index) => ({
+          label: hobby.label,
+          iconClass: hobby.iconClass,
+          sortOrder: index,
+        })),
+      },
+    },
+  });
+  console.log(
+    `Seeded about intro section with ${experiences.length} experiences and ${hobbies.length} hobbies.`
+  );
+}
+
+async function seedAboutHireBannerSection() {
+  const existing = await prisma.aboutHireBannerSection.findUnique({
+    where: { id: "about_hire_banner_singleton" },
+  });
+  if (existing) return;
+
+  const section = aboutData.find((s) => s.id === "about_hire_banner_section");
+  if (!section) return;
+
+  const content = section.content;
+
+  await prisma.aboutHireBannerSection.create({
+    data: {
+      id: "about_hire_banner_singleton",
+      wrapperClass: section.wrapperClass ?? null,
+      sectionClass: section.sectionClass ?? null,
+      contentWrapperClass: content.wrapperClass ?? null,
+      headingText: content.heading?.text ?? null,
+      headingLevel: content.heading?.level ?? null,
+      headingClass: content.heading?.class ?? null,
+      paragraphsBody: content.paragraphs?.body ?? [],
+      paragraphsClass: content.paragraphs?.class ?? null,
+      ctaLabel: content.cta?.label ?? null,
+      ctaVariant: content.cta?.variant ?? null,
+      ctaWrapperClass: content.cta?.wrapperClass ?? null,
+      ctaColumnClass: section.ctaWrapperClass ?? null,
+      entryAnimations: JSON.parse(JSON.stringify(section.entryAnimations ?? [])),
+      scrollAnimations: JSON.parse(JSON.stringify(section.scrollAnimations ?? [])),
+    },
+  });
+  console.log("Seeded about hire banner section.");
+}
+
 async function main() {
   await seedNavbarLinks();
   await seedSocialMediaLinks();
@@ -228,6 +330,8 @@ async function main() {
   await seedPortfolio();
   await seedSkillCategories();
   await seedHomeSection();
+  await seedAboutIntroSection();
+  await seedAboutHireBannerSection();
 }
 
 main()
