@@ -1,9 +1,14 @@
 import Link from "next/link";
-import socialMediaLinks from "@/constants/social-media-links";
 
-function FooterSocials() {
+import { prisma } from "@/lib/prisma";
+
+async function FooterSocials() {
   const date = new Date();
   const year = date.getFullYear();
+
+  const socialMediaLinks = await prisma.socialMediaLink.findMany({
+    orderBy: { sortOrder: "asc" },
+  });
 
   return (
     <div className="grid gap-6 auto-cols-max grid-flow-col items-center">

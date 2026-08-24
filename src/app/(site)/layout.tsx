@@ -1,5 +1,3 @@
-"use client";
-
 import PageTransition from "@/components/page-transition";
 import TransitionProvider from "@/contexts/transition-context";
 

@@ -10,6 +10,16 @@ function AdminDashboardPage() {
             Navbar links
           </Link>
         </li>
+        <li>
+          <Link href="/admin/social-links" className="hover:text-primary">
+            Social links
+          </Link>
+        </li>
+        <li>
+          <Link href="/admin/settings" className="hover:text-primary">
+            Site settings
+          </Link>
+        </li>
       </ul>
     </div>
   );
