@@ -6,6 +6,11 @@ function AdminDashboardPage() {
       <h1 className="text-lg font-medium mb-4">Dashboard</h1>
       <ul className="flex flex-col gap-2">
         <li>
+          <Link href="/admin/home" className="hover:text-primary">
+            Home
+          </Link>
+        </li>
+        <li>
           <Link href="/admin/navbar" className="hover:text-primary">
             Navbar links
           </Link>

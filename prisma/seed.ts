@@ -9,6 +9,7 @@ import socialMediaLinks from "../src/constants/social-media-links";
 import pagesMetadata from "../src/constants/data/metadata";
 import skillsData from "../src/constants/data/skills";
 import portfolioData from "../src/constants/data/portfolio";
+import homeData from "../src/constants/data/home";
 
 async function seedNavbarLinks() {
   const count = await prisma.navbarLink.count();
@@ -178,6 +179,46 @@ async function seedSkillCategories() {
   );
 }
 
+async function seedHomeSection() {
+  const existing = await prisma.homeSection.findUnique({
+    where: { id: "home_singleton" },
+  });
+  if (existing) return;
+
+  const section = homeData[0];
+  const content = section.content;
+  const image = section.image;
+
+  await prisma.homeSection.create({
+    data: {
+      id: "home_singleton",
+      wrapperClass: section.wrapperClass ?? null,
+      sectionClass: section.sectionClass ?? null,
+      contentWrapperClass: content.wrapperClass ?? null,
+      greetMessage: content.greetMessage,
+      name: content.name,
+      jobTitle: content.jobTitle,
+      shortDescription: content.shortDescription,
+      viewPageLinks: JSON.parse(JSON.stringify(content.viewPage ?? [])),
+      entryAnimations: JSON.parse(JSON.stringify(section.entryAnimations ?? [])),
+      scrollAnimations: JSON.parse(JSON.stringify(section.scrollAnimations ?? [])),
+      image: image
+        ? {
+            create: {
+              wrapperId: image.wrapperId ?? null,
+              wrapperClass: image.wrapperClass ?? null,
+              isIllustration: image.isIllustration ?? false,
+              illustrationHtml: image.illustration?.html ?? null,
+              illustrationClass: image.illustration?.class ?? null,
+              path: image.path,
+            },
+          }
+        : undefined,
+    },
+  });
+  console.log("Seeded home section.");
+}
+
 async function main() {
   await seedNavbarLinks();
   await seedSocialMediaLinks();
@@ -186,6 +227,7 @@ async function main() {
   await seedServices();
   await seedPortfolio();
   await seedSkillCategories();
+  await seedHomeSection();
 }
 
 main()

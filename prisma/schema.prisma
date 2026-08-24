@@ -130,3 +130,39 @@ model SkillItem {
   iconUrl         String
   sortOrder       Int
 }
+
+// Shared by Home and (later) About - both have one hero image with an
+// optional inline-SVG illustration alternative to a plain photo.
+model SiteImage {
+  id                String  @id @default(cuid())
+  // Rendered as the wrapping element's literal DOM id - referenced
+  // directly by entry-animation selectors (e.g. "#home-image"), same
+  // caveat as SkillCategory.slug above.
+  wrapperId         String?
+  wrapperClass      String?
+  isIllustration    Boolean @default(false)
+  illustrationHtml  String? @db.Text
+  illustrationClass String?
+  path              String
+
+  homeSection HomeSection?
+}
+
+model HomeSection {
+  id                 String  @id @default("home_singleton")
+  wrapperClass       String?
+  sectionClass       String?
+  // Rendered directly on the content <article> wrapper (distinct from the
+  // two section-level class fields above, which the current component
+  // doesn't actually apply anywhere).
+  contentWrapperClass String?
+  greetMessage       String
+  name             String
+  jobTitle         String  @db.Text // preserves embedded \n
+  shortDescription String  @db.Text
+  viewPageLinks    Json // ViewPageLinkType[] - {url, text}[]
+  imageId          String? @unique
+  image            SiteImage? @relation(fields: [imageId], references: [id])
+  entryAnimations  Json
+  scrollAnimations Json
+}
