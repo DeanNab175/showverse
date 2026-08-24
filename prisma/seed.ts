@@ -7,6 +7,7 @@ import { prisma } from "../src/lib/prisma";
 import navbarLinks from "../src/constants/navbar-links";
 import socialMediaLinks from "../src/constants/social-media-links";
 import pagesMetadata from "../src/constants/data/metadata";
+import skillsData from "../src/constants/data/skills";
 
 async function seedNavbarLinks() {
   const count = await prisma.navbarLink.count();
@@ -63,11 +64,45 @@ async function seedPageMetadata() {
   console.log(`Seeded ${Object.keys(pagesMetadata).length} page metadata rows.`);
 }
 
+async function seedServices() {
+  const existing = await prisma.skillsServicesSection.findUnique({
+    where: { id: "services_singleton" },
+  });
+  if (existing) return;
+
+  const section = skillsData.find((s) => s.id === "services_section");
+  const services = section?.content.services?.list ?? [];
+  const heading = section?.content.heading;
+
+  await prisma.skillsServicesSection.create({
+    data: {
+      id: "services_singleton",
+      sectionClass: section?.class ?? null,
+      headingText: heading?.text ?? null,
+      headingLevel: heading?.level ?? null,
+      headingClass: heading?.class ?? null,
+      servicesWrapperClass: section?.content.services?.wrapperClass ?? null,
+      entryAnimations: JSON.parse(JSON.stringify(section?.entryAnimations ?? [])),
+      scrollAnimations: JSON.parse(JSON.stringify(section?.scrollAnimations ?? [])),
+      services: {
+        create: services.map((service, index) => ({
+          iconClass: service.iconClass,
+          title: service.title,
+          description: service.description,
+          sortOrder: index,
+        })),
+      },
+    },
+  });
+  console.log(`Seeded services section with ${services.length} services.`);
+}
+
 async function main() {
   await seedNavbarLinks();
   await seedSocialMediaLinks();
   await seedSiteSettings();
   await seedPageMetadata();
+  await seedServices();
 }
 
 main()
