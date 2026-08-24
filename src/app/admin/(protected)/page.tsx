@@ -25,6 +25,11 @@ function AdminDashboardPage() {
             Page metadata
           </Link>
         </li>
+        <li>
+          <Link href="/admin/services" className="hover:text-primary">
+            Services
+          </Link>
+        </li>
       </ul>
     </div>
   );
