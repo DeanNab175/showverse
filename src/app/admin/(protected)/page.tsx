@@ -11,6 +11,16 @@ function AdminDashboardPage() {
           </Link>
         </li>
         <li>
+          <Link href="/admin/about" className="hover:text-primary">
+            About
+          </Link>
+        </li>
+        <li>
+          <Link href="/admin/about/hire-banner" className="hover:text-primary">
+            About - Hire banner
+          </Link>
+        </li>
+        <li>
           <Link href="/admin/navbar" className="hover:text-primary">
             Navbar links
           </Link>

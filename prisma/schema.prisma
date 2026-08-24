@@ -145,7 +145,8 @@ model SiteImage {
   illustrationClass String?
   path              String
 
-  homeSection HomeSection?
+  homeSection       HomeSection?
+  aboutIntroSection AboutIntroSection?
 }
 
 model HomeSection {
@@ -163,6 +164,76 @@ model HomeSection {
   viewPageLinks    Json // ViewPageLinkType[] - {url, text}[]
   imageId          String? @unique
   image            SiteImage? @relation(fields: [imageId], references: [id])
+  entryAnimations  Json
+  scrollAnimations Json
+}
+
+model AboutIntroSection {
+  id                  String  @id @default("about_intro_singleton")
+  wrapperClass        String?
+  sectionClass        String?
+  // Rendered directly on the content <article> wrapper - see the same
+  // field on HomeSection for why this is separate from the two
+  // section-level class fields above.
+  contentWrapperClass String?
+  headingText         String?
+  headingLevel        Int?
+  headingClass        String?
+  paragraphsBody      String[]
+  paragraphsClass     String?
+  experiencesWrapperClass String?
+  hobbyHeadingText     String?
+  hobbyHeadingLevel    Int?
+  hobbyHeadingClass    String?
+  ctaLabel             String?
+  ctaVariant           String?
+  ctaIconClass         String?
+  ctaWrapperClass      String?
+  imageId              String? @unique
+  image                SiteImage? @relation(fields: [imageId], references: [id])
+  entryAnimations      Json
+  scrollAnimations     Json
+
+  experiences Experience[]
+  hobbies     Hobby[]
+}
+
+model Experience {
+  id                  String @id @default(cuid())
+  aboutIntroSectionId String
+  aboutIntroSection   AboutIntroSection @relation(fields: [aboutIntroSectionId], references: [id], onDelete: Cascade)
+  total               Int
+  description         String
+  sortOrder            Int
+}
+
+model Hobby {
+  id                  String @id @default(cuid())
+  aboutIntroSectionId String
+  aboutIntroSection   AboutIntroSection @relation(fields: [aboutIntroSectionId], references: [id], onDelete: Cascade)
+  label               String
+  iconClass           String
+  sortOrder           Int
+}
+
+model AboutHireBannerSection {
+  id               String  @id @default("about_hire_banner_singleton")
+  wrapperClass     String?
+  sectionClass     String?
+  contentWrapperClass String?
+  headingText      String?
+  headingLevel     Int?
+  headingClass     String?
+  paragraphsBody   String[]
+  paragraphsClass  String?
+  ctaLabel         String?
+  ctaVariant       String?
+  ctaWrapperClass  String?
+  // The section-level class applied to the column wrapping the CTA button
+  // in BannerSection (distinct from ctaWrapperClass above, which is the
+  // inner content.cta.wrapperClass) - unset in the current data but the
+  // component supports it, so it's kept editable.
+  ctaColumnClass   String?
   entryAnimations  Json
   scrollAnimations Json
 }
