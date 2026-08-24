@@ -66,3 +66,29 @@ model Service {
   description             String @db.Text
   sortOrder               Int
 }
+
+model PortfolioSection {
+  id                   String @id @default("portfolio_singleton")
+  sectionClass         String?
+  headingText          String?
+  headingLevel         Int?
+  headingClass         String?
+  projectsWrapperClass String?
+  perPage              Int    @default(6)
+  entryAnimations      Json
+  scrollAnimations     Json
+
+  projects Project[]
+}
+
+model Project {
+  id                 String @id @default(cuid())
+  portfolioSectionId String
+  section            PortfolioSection @relation(fields: [portfolioSectionId], references: [id], onDelete: Cascade)
+  slug               String @unique
+  title              String
+  description        String @db.Text
+  thumbnailUrl       String
+  previewUrl         String?
+  sortOrder          Int
+}
