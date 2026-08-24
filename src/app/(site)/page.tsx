@@ -1,8 +1,10 @@
 import HomeContent from "@/components/contents/home-content";
-import pagesMetadata from "@/constants/data/metadata";
+import { getPageMetadata } from "@/lib/get-page-metadata";
 import homeData from "@/constants/data/home";
 
-export const metadata = pagesMetadata.home;
+export async function generateMetadata() {
+  return getPageMetadata("home");
+}
 
 export default function HomePage() {
   return <HomeContent data={homeData} />;
