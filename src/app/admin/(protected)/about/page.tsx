@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Experience, Hobby } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 import DeleteButton from "@/components/admin/delete-button";
@@ -60,7 +61,7 @@ async function AboutPage() {
       </div>
 
       <div className="flex flex-col gap-2 mb-8">
-        {(section?.experiences ?? []).map((experience) => (
+        {(section?.experiences ?? []).map((experience: Experience) => (
           <div
             key={experience.id}
             className="flex items-center justify-between rounded-lg bg-surface-bg px-4 py-3"
@@ -99,7 +100,7 @@ async function AboutPage() {
       </div>
 
       <div className="flex flex-col gap-2">
-        {(section?.hobbies ?? []).map((hobby) => (
+        {(section?.hobbies ?? []).map((hobby: Hobby) => (
           <div
             key={hobby.id}
             className="flex items-center justify-between rounded-lg bg-surface-bg px-4 py-3"
