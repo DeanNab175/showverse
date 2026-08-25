@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface ColorFieldProps
@@ -12,6 +13,9 @@ interface ColorFieldProps
    * only writes when the user actually picks a colour.
    */
   fallbackHex: string;
+  /** Human label of the field this control edits, used for the reset button's
+   * accessible name so the five reset buttons are distinguishable. */
+  label: string;
 }
 
 const HEX_PATTERN = /^#[0-9a-fA-F]{6}$/;
@@ -20,6 +24,7 @@ function ColorField({
   value,
   onChange,
   fallbackHex,
+  label,
   placeholder,
   ...props
 }: ColorFieldProps) {
@@ -27,6 +32,7 @@ function ColorField({
   // or empty, so fall back to the default swatch rather than letting the
   // browser silently coerce it to black.
   const swatchValue = HEX_PATTERN.test(value.trim()) ? value.trim() : fallbackHex;
+  const isCustomised = value.trim() !== "";
 
   return (
     <div className="flex items-center gap-2">
@@ -45,6 +51,19 @@ function ColorField({
         className="font-mono text-xs"
         {...props}
       />
+      {/* Clears the field rather than writing fallbackHex: an empty value is
+          stored as null, so the colour keeps tracking the globals.css default
+          instead of being pinned to this hex approximation of it. */}
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        disabled={!isCustomised}
+        onClick={() => onChange("")}
+        aria-label={`Reset ${label} to default`}
+      >
+        Reset
+      </Button>
     </div>
   );
 }

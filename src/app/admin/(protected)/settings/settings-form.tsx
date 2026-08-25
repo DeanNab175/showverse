@@ -39,6 +39,17 @@ function SettingsForm({ defaultValues }: SettingsFormProps) {
     });
   });
 
+  const watched = form.watch();
+  const hasCustomColors = THEME_COLOR_FIELDS.some(
+    (field) => (watched[field.key] ?? "").trim() !== ""
+  );
+
+  const resetAllColors = () => {
+    for (const field of THEME_COLOR_FIELDS) {
+      form.setValue(field.key, "", { shouldDirty: true, shouldValidate: true });
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={onSubmit} className="flex flex-col gap-4 max-w-md">
@@ -57,12 +68,23 @@ function SettingsForm({ defaultValues }: SettingsFormProps) {
         />
 
         <div className="rounded-lg bg-surface-bg px-3 py-3 flex flex-col gap-4">
-          <div>
-            <p className="text-sm font-medium">Theme colours</p>
-            <p className="text-xs text-body-txt/60 mt-1">
-              Leave a colour empty to use the site&apos;s default. Accepts hex,
-              rgb(), hsl(), or oklch().
-            </p>
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <p className="text-sm font-medium">Theme colours</p>
+              <p className="text-xs text-body-txt/60 mt-1">
+                Reset a colour (or leave it empty) to fall back to the
+                site&apos;s default. Accepts hex, rgb(), hsl(), or oklch().
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={!hasCustomColors}
+              onClick={resetAllColors}
+            >
+              Reset all
+            </Button>
           </div>
 
           {THEME_COLOR_FIELDS.map((themeField) => (
@@ -80,6 +102,7 @@ function SettingsForm({ defaultValues }: SettingsFormProps) {
                       onChange={field.onChange}
                       onBlur={field.onBlur}
                       fallbackHex={themeField.fallbackHex}
+                      label={themeField.label}
                     />
                   </FormControl>
                   <p className="text-xs text-body-txt/60">{themeField.description}</p>
