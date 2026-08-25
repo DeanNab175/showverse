@@ -1,11 +1,11 @@
 ---
 name: showverse-skills
-description: Best practices for building and extending the Showverse portfolio app using Next.js (App Router), React, Tailwind CSS, GSAP, and — for its data layer — Prisma + PostgreSQL. Use this skill whenever working on the Showverse codebase, or on any similar Next.js + React + Tailwind + GSAP animated portfolio/site — including adding new pages or sections, building or refactoring components, writing or fixing animations, styling with Tailwind, restructuring folders, reviewing code for cleanliness and maintainability, or working on the app's backend/database (migrating `src/constants/data` into Postgres via Prisma, schema design, data-access patterns). Trigger this whenever the user mentions Showverse, asks to add a new animated section, build a component, wire up scroll animations, clean up file structure, improve component architecture, or touch the database/Prisma layer in this project — even if they don't say "showverse-skills" explicitly.
+description: Best practices for building and extending the Showverse portfolio app using Next.js (App Router), React, Tailwind CSS, GSAP, and — for its data layer — Prisma + PostgreSQL, plus its built-in admin CMS (shadcn/ui + React Hook Form + Zod + Server Actions). Use this skill whenever working on the Showverse codebase, or on any similar Next.js + React + Tailwind + GSAP animated portfolio/site — including adding new pages or sections, building or refactoring components, writing or fixing animations, styling with Tailwind, restructuring folders, reviewing code for cleanliness and maintainability, or working on the app's backend/database (Prisma schema design, data-access patterns, seed data) or its admin CRUD forms. Trigger this whenever the user mentions Showverse, asks to add a new animated section, build a component, wire up scroll animations, clean up file structure, improve component architecture, add or change an admin form, or touch the database/Prisma layer in this project — even if they don't say "showverse-skills" explicitly.
 ---
 
 # Showverse Skills
 
-Guidelines for building and extending the Showverse portfolio app: a Next.js (App Router) + React + Tailwind CSS + GSAP animated site, backed by Prisma + PostgreSQL for its data layer. Apply these whenever adding features, components, styles, animations, or database/data-access code to keep the codebase clean, consistent, and maintainable.
+Guidelines for building and extending the Showverse portfolio app: a Next.js (App Router) + React + Tailwind CSS + GSAP animated site, backed by Prisma + PostgreSQL for its data layer, with a built-in admin CMS at `/admin` (NextAuth-gated, shadcn/ui + React Hook Form + Zod forms submitting to Server Actions). Apply these whenever adding features, components, styles, animations, database/data-access code, or admin CRUD sections to keep the codebase clean, consistent, and maintainable.
 
 ## Related project skills
 
@@ -37,39 +37,42 @@ If a rule below conflicts with one of these, prefer the more specific installed 
 - Default to **Server Components**. Only add `"use client"` to components that need browser APIs, hooks (`useState`, `useEffect`, `useRef`), or GSAP — since GSAP requires the DOM, any component that drives animation is a Client Component.
 - Keep Server/Client boundaries tight: a page can be a Server Component that renders a small Client Component wrapper for the animated part, rather than making the whole page client-side.
 - Co-locate route-specific components in the route folder (`app/projects/_components/`) and keep truly shared components in a top-level `components/` directory.
-- Use `layout.tsx` for shared chrome (nav, footer, providers) and `loading.tsx`/`error.tsx` for route-level states where relevant.
+- Use `layout.tsx` for shared chrome (nav, footer, providers) and `loading.tsx`/`error.tsx` for route-level states where relevant — but at the **route-group** level, not the root: in this repo the public shell lives in `(site)/layout.tsx` and the admin shell in `admin/(protected)/layout.tsx`, while the root layout stays bare (see File structure).
 - Prefer `next/image` for images and `next/font` for fonts over manual `<img>`/`<link>` tags.
 
-## Suggested file structure
+## File structure
 
 ```
-app/
-  layout.tsx
-  page.tsx
-  <route>/
-    page.tsx
-    _components/          # route-specific components
-components/
-  ui/                      # small reusable primitives (Button, Badge, Card)
-  sections/                 # page sections (Hero, ProjectGrid, Footer)
-  animations/                # animation wrapper components (e.g. RevealOnScroll)
-hooks/
-  useGsapContext.js         # shared GSAP setup hooks
-lib/
-  gsap.js                   # gsap.registerPlugin(...) config, run once
-  db/                        # Prisma client singleton + data-access functions (see below)
-  utils.js
-constants/
-  data/                      # static content today; migrating into the DB (see Backend & Database)
+src/
+  app/
+    layout.tsx               # bare root shell: fonts, dark-mode script, Providers — NO nav/grid
+    (site)/                  # public route group
+      layout.tsx             # public shell: background, grid, NavbarComponent, header/footer
+      page.tsx, about/, portfolio/, skills/, contact/
+    admin/
+      login/page.tsx         # pre-auth screen, deliberately outside the admin shell
+      (protected)/
+        layout.tsx           # auth gate + admin shell (AdminSidebarNav, sign-out)
+        <section>/           # one folder per domain: page.tsx + *-form.tsx + actions.ts
+    api/                     # route handlers (auth, admin upload, media)
+  components/
+    ui/                      # shadcn/ui primitives (button, input, textarea, select, checkbox, form, label)
+    admin/                   # admin-only shared widgets (admin-sidebar-nav, image-upload-field, delete-button, animations-json-fields)
+    sections/, contents/, navbar-component/, page-layout/, typography/, ...
+  lib/
+    prisma.ts                # PrismaClient singleton
+    schemas/                 # Zod schemas shared by client forms and Server Actions
+    auth.ts / auth.config.ts # NextAuth, split so middleware stays Prisma/bcrypt-free (edge-safe)
+    gsap.ts, utils.ts, mappers/
+  constants/                 # legacy static content — now only feeds prisma/seed.ts
 prisma/
-  schema.prisma              # Prisma schema (models mirroring constants/data shapes)
-  migrations/
-styles/
-  globals.css
-public/
+  schema.prisma, migrations/, seed.ts, create-admin.ts
 ```
 
-Adapt to what already exists in the repo — match existing structure rather than imposing this wholesale, but nudge toward it when adding new areas.
+Match this structure when adding new areas. Two ownership rules matter most:
+
+- **The root layout stays bare.** The public sidebar/grid shell belongs to `(site)/layout.tsx`; the admin shell belongs to `admin/(protected)/layout.tsx`. Putting shared chrome back into the root layout leaks it into every route group.
+- **Admin domains are self-contained.** Each `admin/(protected)/<section>/` folder owns its list/edit pages, its form component(s), and its `actions.ts` — don't centralize actions or forms across domains.
 
 ## Component architecture
 
@@ -83,7 +86,7 @@ Adapt to what already exists in the repo — match existing structure rather tha
 
 - Prefer Tailwind utility classes directly in JSX; avoid custom CSS unless Tailwind genuinely can't express it (complex keyframes, GSAP-driven inline styles are fine to leave un-styled by Tailwind).
 - Extract repeated utility clusters into small components, not `@apply` soup — e.g. a `Button` component rather than repeating the same 8 classes everywhere.
-- Use the `tailwind.config.js` theme (colors, spacing, fontFamily) for design tokens instead of arbitrary values (`text-[17px]`) except for one-off cases.
+- Use the design tokens defined in `src/app/globals.css` (Tailwind v4 — there is no `tailwind.config.js`; tokens live in the `@theme inline` block: `bg-surface-bg`, `bg-page-bg`, `text-body-txt`, `text-primary`, custom text sizes like `text-xs-plus`/`text-sm-plus`, the radius scale) instead of arbitrary values (`text-[17px]`) except for one-off cases.
 - Use responsive (`md:`, `lg:`) and state (`hover:`, `group-hover:`) variants over manual media queries or JS-based conditionals.
 - Keep class lists readable: group by layout → spacing → typography → color → effects. For long lists, consider `clsx`/`cn()` helpers to keep conditional classes clean.
 
@@ -106,16 +109,52 @@ Adapt to what already exists in the repo — match existing structure rather tha
 
 ## Backend & Database (Prisma + PostgreSQL)
 
-**Status:** Not yet implemented. All content today lives as static TypeScript exports in `src/constants/data/` (`about.ts`, `home.ts`, `metadata.ts`, `portfolio.ts`, `skills.ts`). The plan is to migrate this content into a PostgreSQL database accessed via Prisma, so content can change without a code deploy. This section defines the target conventions for *when that work happens* — don't start the migration unprompted.
+**Status:** Implemented. Site content (home, about, portfolio, skills/services, navbar links, social links, settings, page metadata) lives in PostgreSQL (Neon), accessed via Prisma and editable through the admin CMS. The old static exports under `src/constants/**` remain only as input for `prisma/seed.ts` — new content changes go through the database, not those files.
 
-- **Schema mirrors existing types.** Model `prisma/schema.prisma` fields after the corresponding `src/types/*-types.ts` shapes (`about-data-types.ts`, `portfolio-data-types.ts`, `skills-data-types.ts`, `experience-types.ts`, `hobby-types.ts`) so the migration is a faithful 1:1 move, not a redesign. Reconcile any drift between a `constants/data` file and its type explicitly, don't silently change shape.
-- **One Prisma Client singleton.** Instantiate `PrismaClient` once in `lib/db/client.ts`, cached on `globalThis` in development to survive Next.js hot-reload without exhausting connections. Never `new PrismaClient()` inside a component or route handler.
-- **Data-access layer, not raw Prisma in components.** Wrap queries in small functions under `lib/db/` (e.g. `getPortfolioProjects()`, `getAboutData()`) mirroring today's `constants/data` exports one-for-one, so call sites (`components/contents/*-content.tsx`, `app/(site)/**/page.tsx`) barely change during the migration — swap the import, not the call shape.
-- **Fetch in Server Components.** Next.js Server Components can call the data-access layer directly (no API route needed) — keep this pattern rather than introducing REST/GraphQL endpoints for data only this app consumes. Only add a Route Handler if the data needs to be reached from a Client Component or an external caller.
-- **Env vars.** `DATABASE_URL` (and `DIRECT_URL` if using connection pooling) belong in `.env`/`.env.local`, never committed; document required vars in `README.md` when the migration lands.
-- **Migrations over manual schema edits.** Use `prisma migrate dev` for schema changes locally and `prisma migrate deploy` in CI/production — don't hand-edit the database or rely on `db push` outside prototyping.
-- **See `prisma-database-setup` skill** (`.agents/skills/prisma-database-setup/SKILL.md`) for PostgreSQL-specific connection string format, client generation, and troubleshooting — this file only covers how Prisma should be wired into Showverse's structure, not Prisma mechanics generally.
-- **Migrate incrementally.** Move one `constants/data` file at a time (its type, its Prisma model, its data-access function, its call sites) rather than a single big-bang cutover — keeps each step reviewable and revertible.
+- **One Prisma Client singleton** at `src/lib/prisma.ts`, cached on `globalThis` in development to survive hot-reload without exhausting connections. Never `new PrismaClient()` inside a component or route handler.
+- **Fetch in Server Components.** Pages and layouts call `prisma.*` directly (e.g. `(site)/layout.tsx` loads navbar links; each admin page loads its own rows). Don't add REST/GraphQL endpoints for data only this app consumes — the only Route Handlers are for auth, media, and the admin upload endpoint.
+- **Zod schemas in `src/lib/schemas/`** are the single source of truth for each domain's input shape. The same schema powers client-side validation (via `zodResolver`) and server-side `safeParse` inside the Server Action — never trust client input, always re-parse on the server.
+- **Mutations are Server Actions** colocated in each admin section's `actions.ts` (see the Admin CMS section below for the exact form/action contract). After a successful write, call `revalidatePath()` for both the affected public page and the admin page, then `redirect()`.
+- **Migrations over manual schema edits.** `prisma migrate dev` locally, `prisma migrate deploy` in CI/production. The build script runs `prisma generate` first so CI always has a generated client.
+- **Auth split.** `src/lib/auth.config.ts` holds the edge-safe NextAuth config used by the middleware; `src/lib/auth.ts` adds the Prisma/bcrypt credential logic. Keep Prisma imports out of anything the middleware bundles.
+- **Env vars** are documented in `.env.example` (`DATABASE_URL`, `AUTH_SECRET`, `AUTH_TRUST_HOST`, `ADMIN_EMAIL`/`ADMIN_PASSWORD` for the one-off `pnpm admin:create` script). Image uploads use Netlify Blobs, which is only available under `netlify dev` locally.
+- **See `prisma-database-setup` skill** (`.agents/skills/prisma-database-setup/SKILL.md`) for PostgreSQL-specific connection string format, client generation, and troubleshooting — this file only covers how Prisma is wired into Showverse's structure, not Prisma mechanics generally.
+
+## Admin CMS & forms
+
+The admin CMS lives at `/admin` (NextAuth-gated via `admin/(protected)/layout.tsx`). Forms are built from the shadcn/ui primitives in `src/components/ui/` with React Hook Form + `zodResolver`, submitting typed objects to Server Actions.
+
+**The form ↔ action contract (follow this exactly for every new form):**
+
+- Server Actions take `(prevState: unknown, data: TypedInput)` where `TypedInput` comes from the domain's Zod schema (`z.infer`), plus any bound id params first (e.g. `updateProject(id, prevState, data)` bound with `.bind(null, id)` in the page).
+- Forms wire the action through `useActionState`, and dispatch **inside a transition**:
+
+  ```tsx
+  const [state, formAction, isActionPending] = useActionState(action, undefined);
+  const [isDispatching, startTransition] = useTransition();
+  const isPending = isActionPending || isDispatching;
+
+  const onSubmit = form.handleSubmit((data) => {
+    startTransition(() => {
+      formAction(data);
+    });
+  });
+  ```
+
+  Server-returned errors render from `state?.error`; field-level Zod errors render via `<FormMessage />`.
+- **Never replace this with a bare `useTransition` that manually `await`s the action.** That pattern's `isPending` window ends before Next.js finishes the post-`redirect()` revalidation, so a second save made within ~1–2s silently persists the *previous* submission's data (a real bug that was found and fixed this way). `useActionState` keeps `isPending` true through the whole action + redirect + refresh cycle; calling `formAction` outside `startTransition` breaks that tracking and triggers a React warning.
+- JSON-blob fields (animations, paragraph arrays, view-page links) stay as raw strings in the form (extend the domain schema locally with `z.string()` fields like `entryAnimationsJson`) and are parsed server-side by the existing `parseAnimationsJson`/`parse*Json` helpers.
+- For schemas using `z.coerce` (numeric heading levels etc.), type the form with both generics: `useForm<z.input<typeof formSchema>, unknown, z.output<typeof formSchema>>`.
+
+**Component conventions:**
+
+- **shadcn primitives are retokenized, not stock.** When generating a new component with `pnpm dlx shadcn@latest add <name>`, swap its stock tokens for the site's semantic ones (`bg-surface-bg`, `bg-page-bg`, `text-body-txt`, `ring-primary`, `text-body-txt/60`) the way `button.tsx`, `input.tsx`, and `select.tsx` already do. Never overwrite the existing customized `button.tsx`.
+- Inputs/textareas/select triggers support `surface="nested"` (`bg-page-bg`) for fields inside an already-`bg-surface-bg` group panel; default is `bg-surface-bg`.
+- `ImageUploadField` is a controlled `value`/`onChange` component — wrap it in an RHF `<Controller>`; it handles the upload POST internally and hands back the URL.
+- `AnimationsJsonFields` reads the form via `useFormContext()` — it must be rendered inside `<Form {...form}>`.
+- Enum-like fields (e.g. a CTA's Button variant) use a real `<Select>` populated from the actual source of truth (the `ButtonVariant` type), never a free-text input with a placeholder hint.
+- **Layouts never define their own Server Actions.** A layout-level action can collide with a nested page's action and misfire — keep actions in page-level `actions.ts` files only.
+- Admin pages use the shared `Heading` component with the site's type scale (`text-2xl font-extrabold text-primary` for page titles, `text-xl font-medium` for sub-headings) and the shared `Button` (`asChild` + `Link` for "Add X" links) — no hand-rolled button class strings.
 
 ## When writing or reviewing code, check for
 
@@ -128,7 +167,10 @@ Adapt to what already exists in the repo — match existing structure rather tha
 - [ ] Is the component under ~150–200 lines and single-purpose?
 - [ ] Are ScrollTriggers safe across Next.js route transitions?
 - [ ] Is `prefers-reduced-motion` respected for non-trivial animations?
-- [ ] If touching data: does it go through the `lib/db/` data-access layer (once the Prisma migration lands) rather than raw `PrismaClient` calls in components, and does the Prisma model still match its `src/types/*-types.ts` counterpart?
+- [ ] If touching data: is the query in a Server Component using the `src/lib/prisma.ts` singleton, and does the mutation re-validate with the domain's Zod schema server-side?
+- [ ] If touching an admin form: does it follow the `useActionState` + `startTransition(() => formAction(data))` contract (not a manually-awaited action), and does the action end with `revalidatePath` + `redirect`?
+- [ ] If adding a UI primitive: is it a shadcn component retokenized to the site's semantic tokens, placed in `src/components/ui/`?
+- [ ] Are Server Actions kept in page-level `actions.ts` files, never in layouts?
 
 ## Workflow for adding a new section/feature
 
