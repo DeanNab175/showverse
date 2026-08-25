@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import Heading from "@/components/typography/heading";
+
 import { createSocialLink } from "../actions";
 import SocialLinkForm from "../social-link-form";
 
@@ -9,7 +11,9 @@ function NewSocialLinkPage() {
       <Link href="/admin/social-links" className="text-sm hover:text-primary">
         &larr; Back to social links
       </Link>
-      <h1 className="text-lg font-medium mt-2 mb-4">Add social link</h1>
+      <Heading level={1} className="text-2xl font-extrabold text-primary mt-2 mb-4">
+        Add social link
+      </Heading>
       <SocialLinkForm action={createSocialLink} submitLabel="Create" />
     </div>
   );

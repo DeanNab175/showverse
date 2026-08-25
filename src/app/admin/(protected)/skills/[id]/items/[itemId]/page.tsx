@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
+import Heading from "@/components/typography/heading";
 
 import { updateSkillItem } from "../../../actions";
 import ItemForm from "../../../item-form";
@@ -23,7 +24,9 @@ async function EditSkillItemPage({ params }: EditSkillItemPageProps) {
       <Link href={`/admin/skills/${id}`} className="text-sm hover:text-primary">
         &larr; Back to category
       </Link>
-      <h1 className="text-lg font-medium mt-2 mb-4">Edit item</h1>
+      <Heading level={1} className="text-2xl font-extrabold text-primary mt-2 mb-4">
+        Edit item
+      </Heading>
       <ItemForm action={boundAction} defaultValues={item} submitLabel="Save changes" />
     </div>
   );

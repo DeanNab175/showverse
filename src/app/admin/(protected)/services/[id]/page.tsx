@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
+import Heading from "@/components/typography/heading";
 
 import { updateService } from "../actions";
 import ServiceForm from "../service-form";
@@ -23,7 +24,9 @@ async function EditServicePage({ params }: EditServicePageProps) {
       <Link href="/admin/services" className="text-sm hover:text-primary">
         &larr; Back to services
       </Link>
-      <h1 className="text-lg font-medium mt-2 mb-4">Edit service</h1>
+      <Heading level={1} className="text-2xl font-extrabold text-primary mt-2 mb-4">
+        Edit service
+      </Heading>
       <ServiceForm
         action={boundAction}
         defaultValues={service}

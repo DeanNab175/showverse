@@ -2,15 +2,18 @@
 
 import { signOut } from "next-auth/react";
 
+import { Button } from "@/components/ui/button";
+
 function SignOutButton() {
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
+      size="sm"
       onClick={() => signOut({ callbackUrl: "/admin/login" })}
-      className="text-sm hover:text-primary"
     >
       Sign out
-    </button>
+    </Button>
   );
 }
 

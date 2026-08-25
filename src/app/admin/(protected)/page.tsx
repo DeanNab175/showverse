@@ -1,61 +1,14 @@
-import Link from "next/link";
+import Heading from "@/components/typography/heading";
 
 function AdminDashboardPage() {
   return (
     <div>
-      <h1 className="text-lg font-medium mb-4">Dashboard</h1>
-      <ul className="flex flex-col gap-2">
-        <li>
-          <Link href="/admin/home" className="hover:text-primary">
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link href="/admin/about" className="hover:text-primary">
-            About
-          </Link>
-        </li>
-        <li>
-          <Link href="/admin/about/hire-banner" className="hover:text-primary">
-            About - Hire banner
-          </Link>
-        </li>
-        <li>
-          <Link href="/admin/navbar" className="hover:text-primary">
-            Navbar links
-          </Link>
-        </li>
-        <li>
-          <Link href="/admin/social-links" className="hover:text-primary">
-            Social links
-          </Link>
-        </li>
-        <li>
-          <Link href="/admin/settings" className="hover:text-primary">
-            Site settings
-          </Link>
-        </li>
-        <li>
-          <Link href="/admin/metadata" className="hover:text-primary">
-            Page metadata
-          </Link>
-        </li>
-        <li>
-          <Link href="/admin/services" className="hover:text-primary">
-            Services
-          </Link>
-        </li>
-        <li>
-          <Link href="/admin/portfolio" className="hover:text-primary">
-            Portfolio
-          </Link>
-        </li>
-        <li>
-          <Link href="/admin/skills" className="hover:text-primary">
-            Skills
-          </Link>
-        </li>
-      </ul>
+      <Heading level={1} className="text-2xl font-extrabold text-primary mb-2">
+        Dashboard
+      </Heading>
+      <p className="text-xs-plus text-body-txt/60">
+        Use the sidebar to manage the site&apos;s content.
+      </p>
     </div>
   );
 }

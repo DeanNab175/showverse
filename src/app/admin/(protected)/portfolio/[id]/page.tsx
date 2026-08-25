@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
+import Heading from "@/components/typography/heading";
 
 import { updateProject } from "../actions";
 import ProjectForm from "../project-form";
@@ -23,7 +24,9 @@ async function EditProjectPage({ params }: EditProjectPageProps) {
       <Link href="/admin/portfolio" className="text-sm hover:text-primary">
         &larr; Back to portfolio
       </Link>
-      <h1 className="text-lg font-medium mt-2 mb-4">Edit project</h1>
+      <Heading level={1} className="text-2xl font-extrabold text-primary mt-2 mb-4">
+        Edit project
+      </Heading>
       <ProjectForm
         action={boundAction}
         defaultValues={project}

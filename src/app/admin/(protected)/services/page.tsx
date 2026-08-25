@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { prisma } from "@/lib/prisma";
 import DeleteButton from "@/components/admin/delete-button";
+import Heading from "@/components/typography/heading";
+import { Button } from "@/components/ui/button";
 
 import { deleteService } from "./actions";
 import SectionForm from "./section-form";
@@ -14,7 +16,9 @@ async function ServicesPage() {
 
   return (
     <div>
-      <h1 className="text-lg font-medium mb-4">Services</h1>
+      <Heading level={1} className="text-2xl font-extrabold text-primary mb-4">
+        Services
+      </Heading>
 
       <SectionForm
         defaultValues={{
@@ -27,13 +31,10 @@ async function ServicesPage() {
       />
 
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-medium">Service items</h2>
-        <Link
-          href="/admin/services/new"
-          className="rounded-lg bg-primary text-button-primary-txt px-4 py-2 text-sm font-medium"
-        >
-          Add service
-        </Link>
+        <Heading level={2} className="text-xl font-medium">Service items</Heading>
+        <Button asChild size="sm">
+          <Link href="/admin/services/new">Add service</Link>
+        </Button>
       </div>
 
       <div className="flex flex-col gap-2">

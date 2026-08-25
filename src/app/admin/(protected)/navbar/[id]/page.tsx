@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
+import Heading from "@/components/typography/heading";
 
 import { updateNavbarLink } from "../actions";
 import NavbarLinkForm from "../navbar-link-form";
@@ -23,7 +24,9 @@ async function EditNavbarLinkPage({ params }: EditNavbarLinkPageProps) {
       <Link href="/admin/navbar" className="text-sm hover:text-primary">
         &larr; Back to navbar links
       </Link>
-      <h1 className="text-lg font-medium mt-2 mb-4">Edit navbar link</h1>
+      <Heading level={1} className="text-2xl font-extrabold text-primary mt-2 mb-4">
+        Edit navbar link
+      </Heading>
       <NavbarLinkForm
         action={boundAction}
         defaultValues={link}
