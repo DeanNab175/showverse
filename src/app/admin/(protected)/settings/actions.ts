@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { siteSettingsSchema, type SiteSettingsInput } from "@/lib/schemas/settings-schema";
+import { THEME_COLOR_FIELDS } from "@/lib/theme-settings";
 
 export async function updateSiteSettings(_prevState: unknown, data: SiteSettingsInput) {
   const session = await auth();
@@ -16,10 +17,19 @@ export async function updateSiteSettings(_prevState: unknown, data: SiteSettings
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
 
+  // An emptied field resets to the globals.css default: null means nothing is
+  // injected, so the var() fallback applies.
+  const values = {
+    contactEmail: parsed.data.contactEmail || null,
+    ...Object.fromEntries(
+      THEME_COLOR_FIELDS.map((field) => [field.key, parsed.data[field.key] || null])
+    ),
+  };
+
   await prisma.siteSettings.upsert({
     where: { id: "singleton" },
-    update: { contactEmail: parsed.data.contactEmail || null },
-    create: { id: "singleton", contactEmail: parsed.data.contactEmail || null },
+    update: values,
+    create: { id: "singleton", ...values },
   });
 
   revalidatePath("/", "layout");

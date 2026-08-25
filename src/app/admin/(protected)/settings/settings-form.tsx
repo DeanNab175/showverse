@@ -4,6 +4,7 @@ import { useActionState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import ColorField from "@/components/admin/color-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,21 +16,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { siteSettingsSchema, type SiteSettingsInput } from "@/lib/schemas/settings-schema";
+import { THEME_COLOR_FIELDS } from "@/lib/theme-settings";
 
 import { updateSiteSettings } from "./actions";
 
 interface SettingsFormProps {
-  defaultContactEmail: string;
+  defaultValues: SiteSettingsInput;
 }
 
-function SettingsForm({ defaultContactEmail }: SettingsFormProps) {
+function SettingsForm({ defaultValues }: SettingsFormProps) {
   const [state, formAction, isActionPending] = useActionState(updateSiteSettings, undefined);
   const [isDispatching, startTransition] = useTransition();
+  const isPending = isActionPending || isDispatching;
   const form = useForm<SiteSettingsInput>({
     resolver: zodResolver(siteSettingsSchema),
-    defaultValues: {
-      contactEmail: defaultContactEmail,
-    },
+    defaultValues,
   });
 
   const onSubmit = form.handleSubmit((data) => {
@@ -37,7 +38,6 @@ function SettingsForm({ defaultContactEmail }: SettingsFormProps) {
       formAction(data);
     });
   });
-  const isPending = isActionPending || isDispatching;
 
   return (
     <Form {...form}>
@@ -55,6 +55,40 @@ function SettingsForm({ defaultContactEmail }: SettingsFormProps) {
             </FormItem>
           )}
         />
+
+        <div className="rounded-lg bg-surface-bg px-3 py-3 flex flex-col gap-4">
+          <div>
+            <p className="text-sm font-medium">Theme colours</p>
+            <p className="text-xs text-body-txt/60 mt-1">
+              Leave a colour empty to use the site&apos;s default. Accepts hex,
+              rgb(), hsl(), or oklch().
+            </p>
+          </div>
+
+          {THEME_COLOR_FIELDS.map((themeField) => (
+            <FormField
+              key={themeField.key}
+              control={form.control}
+              name={themeField.key}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{themeField.label}</FormLabel>
+                  <FormControl>
+                    <ColorField
+                      name={field.name}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      fallbackHex={themeField.fallbackHex}
+                    />
+                  </FormControl>
+                  <p className="text-xs text-body-txt/60">{themeField.description}</p>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+        </div>
 
         {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
 
