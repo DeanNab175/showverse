@@ -24,3 +24,5 @@ export const skillsCategoriesSectionSchema = z.object({
   headingText: z.string().trim().optional().or(z.literal("")),
   headingLevel: z.coerce.number().int().min(1).max(6).optional(),
 });
+
+export type SkillsCategoriesSectionInput = z.infer<typeof skillsCategoriesSectionSchema>;

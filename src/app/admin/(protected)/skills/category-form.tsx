@@ -1,9 +1,23 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { skillCategorySchema, type SkillCategoryInput } from "@/lib/schemas/skill-category-schema";
 
 interface CategoryFormProps {
-  action: (prevState: unknown, formData: FormData) => Promise<{ error?: string } | undefined>;
+  action: (prevState: unknown, data: SkillCategoryInput) => Promise<{ error?: string } | undefined>;
   defaultValues?: {
     slug: string;
     labelText: string;
@@ -14,61 +28,94 @@ interface CategoryFormProps {
 }
 
 function CategoryForm({ action, defaultValues, submitLabel }: CategoryFormProps) {
-  const [state, formAction, isPending] = useActionState(action, undefined);
+  const [state, formAction, isActionPending] = useActionState(action, undefined);
+  const [isDispatching, startTransition] = useTransition();
+  const isPending = isActionPending || isDispatching;
+  const form = useForm<SkillCategoryInput>({
+    resolver: zodResolver(skillCategorySchema),
+    defaultValues: {
+      slug: defaultValues?.slug ?? "",
+      labelText: defaultValues?.labelText ?? "",
+      labelClass: defaultValues?.labelClass ?? "",
+      itemsWrapperClass: defaultValues?.itemsWrapperClass ?? "",
+    },
+  });
+
+  const onSubmit = form.handleSubmit((data) => {
+    startTransition(() => {
+      formAction(data);
+    });
+  });
 
   return (
-    <form action={formAction} className="flex flex-col gap-4 max-w-md">
-      <label className="flex flex-col gap-1 text-sm">
-        Slug (used as this category&apos;s DOM id - see note above about
-        animation selectors)
-        <input
+    <Form {...form}>
+      <form onSubmit={onSubmit} className="flex flex-col gap-4 max-w-md">
+        <FormField
+          control={form.control}
           name="slug"
-          defaultValue={defaultValues?.slug}
-          required
-          placeholder="web-developer-category"
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Slug (used as this category&apos;s DOM id - see note above about
+                animation selectors)
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="web-developer-category" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Label
-        <input
+        <FormField
+          control={form.control}
           name="labelText"
-          defaultValue={defaultValues?.labelText}
-          required
-          placeholder="Web developer"
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Label</FormLabel>
+              <FormControl>
+                <Input placeholder="Web developer" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Label class (optional)
-        <input
+        <FormField
+          control={form.control}
           name="labelClass"
-          defaultValue={defaultValues?.labelClass ?? ""}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Label class (optional)</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Items wrapper class (optional)
-        <input
+        <FormField
+          control={form.control}
           name="itemsWrapperClass"
-          defaultValue={defaultValues?.itemsWrapperClass ?? ""}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Items wrapper class (optional)</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
+        {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
 
-      <button
-        type="submit"
-        disabled={isPending}
-        className="mt-2 rounded-xl bg-primary text-button-primary-txt py-3 font-medium disabled:opacity-50"
-      >
-        {isPending ? "Saving..." : submitLabel}
-      </button>
-    </form>
+        <Button type="submit" disabled={isPending} className="mt-2">
+          {isPending ? "Saving..." : submitLabel}
+        </Button>
+      </form>
+    </Form>
   );
 }
 

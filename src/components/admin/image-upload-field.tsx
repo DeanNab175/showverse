@@ -3,14 +3,13 @@
 import { useState } from "react";
 
 interface ImageUploadFieldProps {
-  name: string;
+  value: string;
+  onChange: (url: string) => void;
   label: string;
-  defaultValue?: string;
   folder?: string;
 }
 
-function ImageUploadField({ name, label, defaultValue, folder }: ImageUploadFieldProps) {
-  const [url, setUrl] = useState(defaultValue ?? "");
+function ImageUploadField({ value, onChange, label, folder }: ImageUploadFieldProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,7 +33,7 @@ function ImageUploadField({ name, label, defaultValue, folder }: ImageUploadFiel
         return;
       }
 
-      setUrl(data.url);
+      onChange(data.url);
     } catch {
       setError("Upload failed");
     } finally {
@@ -45,15 +44,14 @@ function ImageUploadField({ name, label, defaultValue, folder }: ImageUploadFiel
   return (
     <div className="flex flex-col gap-2 text-sm">
       <span>{label}</span>
-      {url && (
+      {value && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={url}
+          src={value}
           alt=""
           className="h-24 w-auto rounded-lg bg-surface-bg object-contain"
         />
       )}
-      <input type="hidden" name={name} value={url} />
       <input
         type="file"
         accept="image/*"

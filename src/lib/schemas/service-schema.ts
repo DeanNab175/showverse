@@ -13,3 +13,5 @@ export const servicesSectionSchema = z.object({
   headingLevel: z.coerce.number().int().min(1).max(6).optional(),
   servicesWrapperClass: z.string().trim().optional().or(z.literal("")),
 });
+
+export type ServicesSectionInput = z.infer<typeof servicesSectionSchema>;

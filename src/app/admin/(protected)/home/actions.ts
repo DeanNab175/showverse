@@ -5,7 +5,11 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { homeSectionSchema, parseViewPageLinksJson } from "@/lib/schemas/home-schema";
+import {
+  homeSectionSchema,
+  parseViewPageLinksJson,
+  type HomeSectionInput,
+} from "@/lib/schemas/home-schema";
 import {
   entryAnimationsArraySchema,
   scrollAnimationsArraySchema,
@@ -17,35 +21,27 @@ async function requireAuth() {
   if (!session) redirect("/admin/login");
 }
 
-export async function updateHomeSection(_prevState: unknown, formData: FormData) {
+export interface UpdateHomeSectionInput extends HomeSectionInput {
+  viewPageLinksJson: string;
+  entryAnimationsJson: string;
+  scrollAnimationsJson: string;
+}
+
+export async function updateHomeSection(_prevState: unknown, data: UpdateHomeSectionInput) {
   await requireAuth();
 
-  const parsed = homeSectionSchema.safeParse({
-    wrapperClass: formData.get("wrapperClass"),
-    sectionClass: formData.get("sectionClass"),
-    contentWrapperClass: formData.get("contentWrapperClass"),
-    greetMessage: formData.get("greetMessage"),
-    name: formData.get("name"),
-    jobTitle: formData.get("jobTitle"),
-    shortDescription: formData.get("shortDescription"),
-    imageWrapperId: formData.get("imageWrapperId"),
-    imageWrapperClass: formData.get("imageWrapperClass"),
-    isIllustration: formData.get("isIllustration") === "on",
-    illustrationHtml: formData.get("illustrationHtml"),
-    illustrationClass: formData.get("illustrationClass"),
-    imagePath: formData.get("imagePath"),
-  });
+  const parsed = homeSectionSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
 
-  const viewPageLinks = parseViewPageLinksJson(formData.get("viewPageLinksJson"));
+  const viewPageLinks = parseViewPageLinksJson(data.viewPageLinksJson);
   if (!viewPageLinks.success) {
     return { error: `View page links: ${viewPageLinks.error}` };
   }
 
   const entryAnimations = parseAnimationsJson(
-    formData.get("entryAnimationsJson"),
+    data.entryAnimationsJson,
     entryAnimationsArraySchema
   );
   if (!entryAnimations.success) {
@@ -53,7 +49,7 @@ export async function updateHomeSection(_prevState: unknown, formData: FormData)
   }
 
   const scrollAnimations = parseAnimationsJson(
-    formData.get("scrollAnimationsJson"),
+    data.scrollAnimationsJson,
     scrollAnimationsArraySchema
   );
   if (!scrollAnimations.success) {

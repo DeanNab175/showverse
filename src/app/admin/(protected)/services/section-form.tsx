@@ -1,10 +1,32 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import AnimationsJsonFields from "@/components/admin/animations-json-fields";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { servicesSectionSchema } from "@/lib/schemas/service-schema";
 
 import { updateServicesSection } from "./actions";
+
+const formSchema = servicesSectionSchema.extend({
+  entryAnimationsJson: z.string(),
+  scrollAnimationsJson: z.string(),
+});
+
+type FormValues = z.input<typeof formSchema>;
+type FormOutput = z.output<typeof formSchema>;
 
 interface SectionFormProps {
   defaultValues: {
@@ -17,55 +39,86 @@ interface SectionFormProps {
 }
 
 function SectionForm({ defaultValues }: SectionFormProps) {
-  const [state, formAction, isPending] = useActionState(updateServicesSection, undefined);
+  const [state, formAction, isActionPending] = useActionState(updateServicesSection, undefined);
+  const [isDispatching, startTransition] = useTransition();
+  const isPending = isActionPending || isDispatching;
+  const form = useForm<FormValues, unknown, FormOutput>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      headingText: defaultValues.headingText,
+      headingLevel: defaultValues.headingLevel || undefined,
+      servicesWrapperClass: defaultValues.servicesWrapperClass,
+      entryAnimationsJson: JSON.stringify(defaultValues.entryAnimations ?? [], null, 2),
+      scrollAnimationsJson: JSON.stringify(defaultValues.scrollAnimations ?? [], null, 2),
+    },
+  });
+
+  const onSubmit = form.handleSubmit((data) => {
+    startTransition(() => {
+      formAction(data);
+    });
+  });
 
   return (
-    <form action={formAction} className="flex flex-col gap-4 max-w-md mb-8">
-      <label className="flex flex-col gap-1 text-sm">
-        Heading text
-        <input
+    <Form {...form}>
+      <form onSubmit={onSubmit} className="flex flex-col gap-4 max-w-md mb-8">
+        <FormField
+          control={form.control}
           name="headingText"
-          defaultValue={defaultValues.headingText}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Heading text</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Heading level (1-6)
-        <input
+        <FormField
+          control={form.control}
           name="headingLevel"
-          type="number"
-          min={1}
-          max={6}
-          defaultValue={defaultValues.headingLevel}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Heading level (1-6)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  min={1}
+                  max={6}
+                  {...field}
+                  value={(field.value as number | string | undefined) ?? ""}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Services grid wrapper class
-        <input
+        <FormField
+          control={form.control}
           name="servicesWrapperClass"
-          defaultValue={defaultValues.servicesWrapperClass}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Services grid wrapper class</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <AnimationsJsonFields
-        defaultEntryAnimations={defaultValues.entryAnimations}
-        defaultScrollAnimations={defaultValues.scrollAnimations}
-      />
+        <AnimationsJsonFields />
 
-      {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
+        {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
 
-      <button
-        type="submit"
-        disabled={isPending}
-        className="mt-2 rounded-xl bg-primary text-button-primary-txt py-3 font-medium disabled:opacity-50"
-      >
-        {isPending ? "Saving..." : "Save section settings"}
-      </button>
-    </form>
+        <Button type="submit" disabled={isPending} className="mt-2">
+          {isPending ? "Saving..." : "Save section settings"}
+        </Button>
+      </form>
+    </Form>
   );
 }
 

@@ -5,7 +5,12 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { serviceSchema, servicesSectionSchema } from "@/lib/schemas/service-schema";
+import {
+  serviceSchema,
+  servicesSectionSchema,
+  type ServiceInput,
+  type ServicesSectionInput,
+} from "@/lib/schemas/service-schema";
 import {
   entryAnimationsArraySchema,
   scrollAnimationsArraySchema,
@@ -17,20 +22,24 @@ async function requireAuth() {
   if (!session) redirect("/admin/login");
 }
 
-export async function updateServicesSection(_prevState: unknown, formData: FormData) {
+export interface UpdateServicesSectionInput extends ServicesSectionInput {
+  entryAnimationsJson: string;
+  scrollAnimationsJson: string;
+}
+
+export async function updateServicesSection(
+  _prevState: unknown,
+  data: UpdateServicesSectionInput
+) {
   await requireAuth();
 
-  const parsed = servicesSectionSchema.safeParse({
-    headingText: formData.get("headingText"),
-    headingLevel: formData.get("headingLevel"),
-    servicesWrapperClass: formData.get("servicesWrapperClass"),
-  });
+  const parsed = servicesSectionSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
 
   const entryAnimations = parseAnimationsJson(
-    formData.get("entryAnimationsJson"),
+    data.entryAnimationsJson,
     entryAnimationsArraySchema
   );
   if (!entryAnimations.success) {
@@ -38,7 +47,7 @@ export async function updateServicesSection(_prevState: unknown, formData: FormD
   }
 
   const scrollAnimations = parseAnimationsJson(
-    formData.get("scrollAnimationsJson"),
+    data.scrollAnimationsJson,
     scrollAnimationsArraySchema
   );
   if (!scrollAnimations.success) {
@@ -61,18 +70,10 @@ export async function updateServicesSection(_prevState: unknown, formData: FormD
   redirect("/admin/services");
 }
 
-function parseServiceFormData(formData: FormData) {
-  return serviceSchema.safeParse({
-    iconClass: formData.get("iconClass"),
-    title: formData.get("title"),
-    description: formData.get("description"),
-  });
-}
-
-export async function createService(_prevState: unknown, formData: FormData) {
+export async function createService(_prevState: unknown, data: ServiceInput) {
   await requireAuth();
 
-  const parsed = parseServiceFormData(formData);
+  const parsed = serviceSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
@@ -95,10 +96,10 @@ export async function createService(_prevState: unknown, formData: FormData) {
   redirect("/admin/services");
 }
 
-export async function updateService(id: string, _prevState: unknown, formData: FormData) {
+export async function updateService(id: string, _prevState: unknown, data: ServiceInput) {
   await requireAuth();
 
-  const parsed = parseServiceFormData(formData);
+  const parsed = serviceSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }

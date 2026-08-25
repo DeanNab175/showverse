@@ -5,26 +5,17 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { navbarLinkSchema } from "@/lib/schemas/navbar-schema";
+import { navbarLinkSchema, type NavbarLinkInput } from "@/lib/schemas/navbar-schema";
 
 async function requireAuth() {
   const session = await auth();
   if (!session) redirect("/admin/login");
 }
 
-function parseFormData(formData: FormData) {
-  return navbarLinkSchema.safeParse({
-    name: formData.get("name"),
-    href: formData.get("href"),
-    iconClass: formData.get("iconClass"),
-    iconFontSizeClass: formData.get("iconFontSizeClass"),
-  });
-}
-
-export async function createNavbarLink(_prevState: unknown, formData: FormData) {
+export async function createNavbarLink(_prevState: unknown, data: NavbarLinkInput) {
   await requireAuth();
 
-  const parsed = parseFormData(formData);
+  const parsed = navbarLinkSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
@@ -46,14 +37,10 @@ export async function createNavbarLink(_prevState: unknown, formData: FormData) 
   redirect("/admin/navbar");
 }
 
-export async function updateNavbarLink(
-  id: string,
-  _prevState: unknown,
-  formData: FormData
-) {
+export async function updateNavbarLink(id: string, _prevState: unknown, data: NavbarLinkInput) {
   await requireAuth();
 
-  const parsed = parseFormData(formData);
+  const parsed = navbarLinkSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
