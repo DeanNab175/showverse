@@ -1,6 +1,6 @@
 # ShowVerse
 
-A portfolio site with a built-in admin CMS. Public pages are rendered from a PostgreSQL database, and every section (home, about, portfolio, skills/services, navigation, metadata) is editable from `/admin` without a code deploy.
+A portfolio site with a built-in admin CMS. Public pages are rendered from a PostgreSQL database, and every section (home, about, portfolio, skills/services, navigation, metadata) — plus the theme's brand colours — is editable from `/admin` without a code deploy.
 
 **Stack:** Next.js (App Router) · React 19 · Tailwind CSS v4 · GSAP · Prisma + PostgreSQL (Neon) · NextAuth (Auth.js) · shadcn/ui + React Hook Form + Zod · Netlify Blobs (image uploads)
 
