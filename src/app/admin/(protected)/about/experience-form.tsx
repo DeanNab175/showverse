@@ -1,9 +1,27 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { experienceSchema } from "@/lib/schemas/about-schema";
+
+type FormValues = z.input<typeof experienceSchema>;
+type FormOutput = z.output<typeof experienceSchema>;
 
 interface ExperienceFormProps {
-  action: (prevState: unknown, formData: FormData) => Promise<{ error?: string } | undefined>;
+  action: (prevState: unknown, data: FormOutput) => Promise<{ error?: string } | undefined>;
   defaultValues?: {
     total: number;
     description: string;
@@ -12,42 +30,66 @@ interface ExperienceFormProps {
 }
 
 function ExperienceForm({ action, defaultValues, submitLabel }: ExperienceFormProps) {
-  const [state, formAction, isPending] = useActionState(action, undefined);
+  const [state, formAction, isActionPending] = useActionState(action, undefined);
+  const [isDispatching, startTransition] = useTransition();
+  const isPending = isActionPending || isDispatching;
+  const form = useForm<FormValues, unknown, FormOutput>({
+    resolver: zodResolver(experienceSchema),
+    defaultValues: {
+      total: defaultValues?.total ?? 0,
+      description: defaultValues?.description ?? "",
+    },
+  });
+
+  const onSubmit = form.handleSubmit((data) => {
+    startTransition(() => {
+      formAction(data);
+    });
+  });
 
   return (
-    <form action={formAction} className="flex flex-col gap-4 max-w-md">
-      <label className="flex flex-col gap-1 text-sm">
-        Total
-        <input
+    <Form {...form}>
+      <form onSubmit={onSubmit} className="flex flex-col gap-4 max-w-md">
+        <FormField
+          control={form.control}
           name="total"
-          type="number"
-          min={0}
-          defaultValue={defaultValues?.total}
-          required
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Total</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  min={0}
+                  {...field}
+                  value={(field.value as number | string | undefined) ?? ""}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Description
-        <input
+        <FormField
+          control={form.control}
           name="description"
-          defaultValue={defaultValues?.description}
-          required
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
+        {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
 
-      <button
-        type="submit"
-        disabled={isPending}
-        className="mt-2 rounded-xl bg-primary text-button-primary-txt py-3 font-medium disabled:opacity-50"
-      >
-        {isPending ? "Saving..." : submitLabel}
-      </button>
-    </form>
+        <Button type="submit" disabled={isPending} className="mt-2">
+          {isPending ? "Saving..." : submitLabel}
+        </Button>
+      </form>
+    </Form>
   );
 }
 

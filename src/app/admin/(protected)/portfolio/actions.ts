@@ -6,7 +6,12 @@ import { Prisma } from "@prisma/client";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { projectSchema, portfolioSectionSchema } from "@/lib/schemas/project-schema";
+import {
+  projectSchema,
+  portfolioSectionSchema,
+  type ProjectInput,
+  type PortfolioSectionInput,
+} from "@/lib/schemas/project-schema";
 import {
   entryAnimationsArraySchema,
   scrollAnimationsArraySchema,
@@ -18,20 +23,24 @@ async function requireAuth() {
   if (!session) redirect("/admin/login");
 }
 
-export async function updatePortfolioSection(_prevState: unknown, formData: FormData) {
+export interface UpdatePortfolioSectionInput extends PortfolioSectionInput {
+  entryAnimationsJson: string;
+  scrollAnimationsJson: string;
+}
+
+export async function updatePortfolioSection(
+  _prevState: unknown,
+  data: UpdatePortfolioSectionInput
+) {
   await requireAuth();
 
-  const parsed = portfolioSectionSchema.safeParse({
-    headingText: formData.get("headingText"),
-    headingLevel: formData.get("headingLevel"),
-    perPage: formData.get("perPage"),
-  });
+  const parsed = portfolioSectionSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
 
   const entryAnimations = parseAnimationsJson(
-    formData.get("entryAnimationsJson"),
+    data.entryAnimationsJson,
     entryAnimationsArraySchema
   );
   if (!entryAnimations.success) {
@@ -39,7 +48,7 @@ export async function updatePortfolioSection(_prevState: unknown, formData: Form
   }
 
   const scrollAnimations = parseAnimationsJson(
-    formData.get("scrollAnimationsJson"),
+    data.scrollAnimationsJson,
     scrollAnimationsArraySchema
   );
   if (!scrollAnimations.success) {
@@ -62,20 +71,10 @@ export async function updatePortfolioSection(_prevState: unknown, formData: Form
   redirect("/admin/portfolio");
 }
 
-function parseProjectFormData(formData: FormData) {
-  return projectSchema.safeParse({
-    slug: formData.get("slug"),
-    title: formData.get("title"),
-    description: formData.get("description"),
-    thumbnailUrl: formData.get("thumbnailUrl"),
-    previewUrl: formData.get("previewUrl"),
-  });
-}
-
-export async function createProject(_prevState: unknown, formData: FormData) {
+export async function createProject(_prevState: unknown, data: ProjectInput) {
   await requireAuth();
 
-  const parsed = parseProjectFormData(formData);
+  const parsed = projectSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
@@ -106,10 +105,10 @@ export async function createProject(_prevState: unknown, formData: FormData) {
   redirect("/admin/portfolio");
 }
 
-export async function updateProject(id: string, _prevState: unknown, formData: FormData) {
+export async function updateProject(id: string, _prevState: unknown, data: ProjectInput) {
   await requireAuth();
 
-  const parsed = parseProjectFormData(formData);
+  const parsed = projectSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }

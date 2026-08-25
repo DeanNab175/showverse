@@ -1,11 +1,52 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useTransition } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import ImageUploadField from "@/components/admin/image-upload-field";
 import AnimationsJsonFields from "@/components/admin/animations-json-fields";
+import { Button, type ButtonVariant } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { aboutIntroSectionSchema } from "@/lib/schemas/about-schema";
 
 import { updateAboutIntroSection } from "./actions";
+
+const BUTTON_VARIANTS: NonNullable<ButtonVariant>[] = [
+  "default",
+  "secondary",
+  "outline",
+  "ghost",
+  "link",
+  "destructive",
+];
+
+const formSchema = aboutIntroSectionSchema.extend({
+  paragraphsBodyJson: z.string(),
+  entryAnimationsJson: z.string(),
+  scrollAnimationsJson: z.string(),
+});
+
+type FormValues = z.input<typeof formSchema>;
+type FormOutput = z.output<typeof formSchema>;
 
 interface SectionFormProps {
   defaultValues: {
@@ -37,246 +78,416 @@ interface SectionFormProps {
 }
 
 function SectionForm({ defaultValues }: SectionFormProps) {
-  const [state, formAction, isPending] = useActionState(updateAboutIntroSection, undefined);
+  const [state, formAction, isActionPending] = useActionState(
+    updateAboutIntroSection,
+    undefined
+  );
+  const [isDispatching, startTransition] = useTransition();
+  const isPending = isActionPending || isDispatching;
+  const form = useForm<FormValues, unknown, FormOutput>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      wrapperClass: defaultValues.wrapperClass,
+      sectionClass: defaultValues.sectionClass,
+      contentWrapperClass: defaultValues.contentWrapperClass,
+      headingText: defaultValues.headingText,
+      headingLevel: defaultValues.headingLevel || undefined,
+      headingClass: defaultValues.headingClass,
+      paragraphsClass: defaultValues.paragraphsClass,
+      experiencesWrapperClass: defaultValues.experiencesWrapperClass,
+      hobbyHeadingText: defaultValues.hobbyHeadingText,
+      hobbyHeadingLevel: defaultValues.hobbyHeadingLevel || undefined,
+      hobbyHeadingClass: defaultValues.hobbyHeadingClass,
+      ctaLabel: defaultValues.ctaLabel,
+      ctaVariant: defaultValues.ctaVariant,
+      ctaIconClass: defaultValues.ctaIconClass,
+      ctaWrapperClass: defaultValues.ctaWrapperClass,
+      imageWrapperId: defaultValues.imageWrapperId,
+      imageWrapperClass: defaultValues.imageWrapperClass,
+      isIllustration: defaultValues.isIllustration,
+      illustrationHtml: defaultValues.illustrationHtml,
+      illustrationClass: defaultValues.illustrationClass,
+      imagePath: defaultValues.imagePath,
+      paragraphsBodyJson: JSON.stringify(defaultValues.paragraphsBody ?? [], null, 2),
+      entryAnimationsJson: JSON.stringify(defaultValues.entryAnimations ?? [], null, 2),
+      scrollAnimationsJson: JSON.stringify(defaultValues.scrollAnimations ?? [], null, 2),
+    },
+  });
+
+  const onSubmit = form.handleSubmit((data) => {
+    startTransition(() => {
+      formAction(data);
+    });
+  });
 
   return (
-    <form action={formAction} className="flex flex-col gap-4 max-w-md mb-8">
-      <label className="flex flex-col gap-1 text-sm">
-        Heading text
-        <input
+    <Form {...form}>
+      <form onSubmit={onSubmit} className="flex flex-col gap-4 max-w-md mb-8">
+        <FormField
+          control={form.control}
           name="headingText"
-          defaultValue={defaultValues.headingText}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Heading text</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Heading level (1-6)
-        <input
+        <FormField
+          control={form.control}
           name="headingLevel"
-          type="number"
-          min={1}
-          max={6}
-          defaultValue={defaultValues.headingLevel}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Heading level (1-6)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  min={1}
+                  max={6}
+                  {...field}
+                  value={(field.value as number | string | undefined) ?? ""}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Heading class
-        <input
+        <FormField
+          control={form.control}
           name="headingClass"
-          defaultValue={defaultValues.headingClass}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Heading class</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Paragraphs (JSON array of strings)
-        <textarea
+        <FormField
+          control={form.control}
           name="paragraphsBodyJson"
-          defaultValue={JSON.stringify(defaultValues.paragraphsBody ?? [], null, 2)}
-          rows={5}
-          spellCheck={false}
-          className="rounded-lg bg-surface-bg px-3 py-2 font-mono text-xs outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Paragraphs (JSON array of strings)</FormLabel>
+              <FormControl>
+                <Textarea rows={5} spellCheck={false} className="font-mono text-xs" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Paragraphs class
-        <input
+        <FormField
+          control={form.control}
           name="paragraphsClass"
-          defaultValue={defaultValues.paragraphsClass}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Paragraphs class</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Experiences wrapper class
-        <input
+        <FormField
+          control={form.control}
           name="experiencesWrapperClass"
-          defaultValue={defaultValues.experiencesWrapperClass}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Experiences wrapper class</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Hobby heading text
-        <input
+        <FormField
+          control={form.control}
           name="hobbyHeadingText"
-          defaultValue={defaultValues.hobbyHeadingText}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Hobby heading text</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Hobby heading level (1-6)
-        <input
+        <FormField
+          control={form.control}
           name="hobbyHeadingLevel"
-          type="number"
-          min={1}
-          max={6}
-          defaultValue={defaultValues.hobbyHeadingLevel}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Hobby heading level (1-6)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  min={1}
+                  max={6}
+                  {...field}
+                  value={(field.value as number | string | undefined) ?? ""}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Hobby heading class
-        <input
+        <FormField
+          control={form.control}
           name="hobbyHeadingClass"
-          defaultValue={defaultValues.hobbyHeadingClass}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Hobby heading class</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <div className="rounded-lg bg-surface-bg px-3 py-3 flex flex-col gap-4">
-        <p className="text-sm font-medium">CTA button</p>
+        <div className="rounded-lg bg-surface-bg px-3 py-3 flex flex-col gap-4">
+          <p className="text-sm font-medium">CTA button</p>
 
-        <label className="flex flex-col gap-1 text-sm">
-          Label
-          <input
+          <FormField
+            control={form.control}
             name="ctaLabel"
-            defaultValue={defaultValues.ctaLabel}
-            className="rounded-lg bg-page-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Label</FormLabel>
+                <FormControl>
+                  <Input surface="nested" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </label>
 
-        <label className="flex flex-col gap-1 text-sm">
-          Variant
-          <input
+          <FormField
+            control={form.control}
             name="ctaVariant"
-            defaultValue={defaultValues.ctaVariant}
-            placeholder="default, secondary, outline, ghost, link, destructive"
-            className="rounded-lg bg-page-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Variant</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger surface="nested">
+                      <SelectValue placeholder="Select a variant" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {BUTTON_VARIANTS.map((variant) => (
+                      <SelectItem key={variant} value={variant}>
+                        {variant}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </label>
 
-        <label className="flex flex-col gap-1 text-sm">
-          Icon class
-          <input
+          <FormField
+            control={form.control}
             name="ctaIconClass"
-            defaultValue={defaultValues.ctaIconClass}
-            className="rounded-lg bg-page-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Icon class</FormLabel>
+                <FormControl>
+                  <Input surface="nested" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </label>
 
-        <label className="flex flex-col gap-1 text-sm">
-          Wrapper class
-          <input
+          <FormField
+            control={form.control}
             name="ctaWrapperClass"
-            defaultValue={defaultValues.ctaWrapperClass}
-            className="rounded-lg bg-page-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Wrapper class</FormLabel>
+                <FormControl>
+                  <Input surface="nested" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </label>
-      </div>
+        </div>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Content wrapper class
-        <input
+        <FormField
+          control={form.control}
           name="contentWrapperClass"
-          defaultValue={defaultValues.contentWrapperClass}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Content wrapper class</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Section wrapper class
-        <input
+        <FormField
+          control={form.control}
           name="wrapperClass"
-          defaultValue={defaultValues.wrapperClass}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Section wrapper class</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </label>
 
-      <label className="flex flex-col gap-1 text-sm">
-        Section class
-        <input
+        <FormField
+          control={form.control}
           name="sectionClass"
-          defaultValue={defaultValues.sectionClass}
-          className="rounded-lg bg-surface-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
-        />
-      </label>
-
-      <div className="rounded-lg bg-surface-bg px-3 py-3 flex flex-col gap-4">
-        <p className="text-sm font-medium">Image</p>
-
-        <ImageUploadField
-          name="imagePath"
-          label="Photo (used as a fallback / non-illustration image)"
-          defaultValue={defaultValues.imagePath}
-          folder="about"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Section class</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
 
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
+        <div className="rounded-lg bg-surface-bg px-3 py-3 flex flex-col gap-4">
+          <p className="text-sm font-medium">Image</p>
+
+          <Controller
+            control={form.control}
+            name="imagePath"
+            render={({ field, fieldState }) => (
+              <div className="flex flex-col gap-1">
+                <ImageUploadField
+                  label="Photo (used as a fallback / non-illustration image)"
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                  folder="about"
+                />
+                {fieldState.error && (
+                  <p className="text-sm text-destructive">{fieldState.error.message}</p>
+                )}
+              </div>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="isIllustration"
-            defaultChecked={defaultValues.isIllustration}
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center gap-2">
+                <FormControl>
+                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                </FormControl>
+                <FormLabel className="font-normal">
+                  Use the inline SVG illustration instead of the photo
+                </FormLabel>
+              </FormItem>
+            )}
           />
-          Use the inline SVG illustration instead of the photo
-        </label>
 
-        <label className="flex flex-col gap-1 text-sm">
-          Illustration SVG markup
-          <textarea
+          <FormField
+            control={form.control}
             name="illustrationHtml"
-            defaultValue={defaultValues.illustrationHtml}
-            rows={4}
-            spellCheck={false}
-            className="rounded-lg bg-page-bg px-3 py-2 font-mono text-xs outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Illustration SVG markup</FormLabel>
+                <FormControl>
+                  <Textarea
+                    surface="nested"
+                    rows={4}
+                    spellCheck={false}
+                    className="font-mono text-xs"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </label>
 
-        <label className="flex flex-col gap-1 text-sm">
-          Illustration class
-          <input
+          <FormField
+            control={form.control}
             name="illustrationClass"
-            defaultValue={defaultValues.illustrationClass}
-            className="rounded-lg bg-page-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Illustration class</FormLabel>
+                <FormControl>
+                  <Input surface="nested" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </label>
 
-        <label className="flex flex-col gap-1 text-sm">
-          Image wrapper class
-          <input
+          <FormField
+            control={form.control}
             name="imageWrapperClass"
-            defaultValue={defaultValues.imageWrapperClass}
-            className="rounded-lg bg-page-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Image wrapper class</FormLabel>
+                <FormControl>
+                  <Input surface="nested" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </label>
 
-        <label className="flex flex-col gap-1 text-sm">
-          Image wrapper id
-          <input
+          <FormField
+            control={form.control}
             name="imageWrapperId"
-            defaultValue={defaultValues.imageWrapperId}
-            className="rounded-lg bg-page-bg px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Image wrapper id</FormLabel>
+                <FormControl>
+                  <Input surface="nested" {...field} />
+                </FormControl>
+                <p className="text-xs text-body-txt/60">
+                  Rendered as this element&apos;s literal DOM id - the entry
+                  animations below may target it directly (e.g.
+                  &quot;#about-image&quot;). Renaming it without updating the
+                  matching animation selector will silently break that animation.
+                </p>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          <span className="text-xs text-body-txt/60">
-            Rendered as this element&apos;s literal DOM id - the entry
-            animations below may target it directly (e.g.
-            &quot;#about-image&quot;). Renaming it without updating the
-            matching animation selector will silently break that animation.
-          </span>
-        </label>
-      </div>
+        </div>
 
-      <AnimationsJsonFields
-        defaultEntryAnimations={defaultValues.entryAnimations}
-        defaultScrollAnimations={defaultValues.scrollAnimations}
-      />
+        <AnimationsJsonFields />
 
-      {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
+        {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
 
-      <button
-        type="submit"
-        disabled={isPending}
-        className="mt-2 rounded-xl bg-primary text-button-primary-txt py-3 font-medium disabled:opacity-50"
-      >
-        {isPending ? "Saving..." : "Save changes"}
-      </button>
-    </form>
+        <Button type="submit" disabled={isPending} className="mt-2">
+          {isPending ? "Saving..." : "Save changes"}
+        </Button>
+      </form>
+    </Form>
   );
 }
 

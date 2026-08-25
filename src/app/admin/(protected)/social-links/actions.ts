@@ -5,26 +5,17 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { socialLinkSchema } from "@/lib/schemas/social-link-schema";
+import { socialLinkSchema, type SocialLinkInput } from "@/lib/schemas/social-link-schema";
 
 async function requireAuth() {
   const session = await auth();
   if (!session) redirect("/admin/login");
 }
 
-function parseFormData(formData: FormData) {
-  return socialLinkSchema.safeParse({
-    name: formData.get("name"),
-    href: formData.get("href"),
-    iconClass: formData.get("iconClass"),
-    hoverColorClass: formData.get("hoverColorClass"),
-  });
-}
-
-export async function createSocialLink(_prevState: unknown, formData: FormData) {
+export async function createSocialLink(_prevState: unknown, data: SocialLinkInput) {
   await requireAuth();
 
-  const parsed = parseFormData(formData);
+  const parsed = socialLinkSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
@@ -46,14 +37,10 @@ export async function createSocialLink(_prevState: unknown, formData: FormData) 
   redirect("/admin/social-links");
 }
 
-export async function updateSocialLink(
-  id: string,
-  _prevState: unknown,
-  formData: FormData
-) {
+export async function updateSocialLink(id: string, _prevState: unknown, data: SocialLinkInput) {
   await requireAuth();
 
-  const parsed = parseFormData(formData);
+  const parsed = socialLinkSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }

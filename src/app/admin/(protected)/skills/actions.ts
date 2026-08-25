@@ -10,6 +10,9 @@ import {
   skillCategorySchema,
   skillItemSchema,
   skillsCategoriesSectionSchema,
+  type SkillCategoryInput,
+  type SkillItemInput,
+  type SkillsCategoriesSectionInput,
 } from "@/lib/schemas/skill-category-schema";
 import {
   entryAnimationsArraySchema,
@@ -22,22 +25,24 @@ async function requireAuth() {
   if (!session) redirect("/admin/login");
 }
 
+export interface UpdateSkillsCategoriesSectionInput extends SkillsCategoriesSectionInput {
+  entryAnimationsJson: string;
+  scrollAnimationsJson: string;
+}
+
 export async function updateSkillsCategoriesSection(
   _prevState: unknown,
-  formData: FormData
+  data: UpdateSkillsCategoriesSectionInput
 ) {
   await requireAuth();
 
-  const parsed = skillsCategoriesSectionSchema.safeParse({
-    headingText: formData.get("headingText"),
-    headingLevel: formData.get("headingLevel"),
-  });
+  const parsed = skillsCategoriesSectionSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
 
   const entryAnimations = parseAnimationsJson(
-    formData.get("entryAnimationsJson"),
+    data.entryAnimationsJson,
     entryAnimationsArraySchema
   );
   if (!entryAnimations.success) {
@@ -45,7 +50,7 @@ export async function updateSkillsCategoriesSection(
   }
 
   const scrollAnimations = parseAnimationsJson(
-    formData.get("scrollAnimationsJson"),
+    data.scrollAnimationsJson,
     scrollAnimationsArraySchema
   );
   if (!scrollAnimations.success) {
@@ -67,19 +72,10 @@ export async function updateSkillsCategoriesSection(
   redirect("/admin/skills");
 }
 
-function parseCategoryFormData(formData: FormData) {
-  return skillCategorySchema.safeParse({
-    slug: formData.get("slug"),
-    labelText: formData.get("labelText"),
-    labelClass: formData.get("labelClass"),
-    itemsWrapperClass: formData.get("itemsWrapperClass"),
-  });
-}
-
-export async function createSkillCategory(_prevState: unknown, formData: FormData) {
+export async function createSkillCategory(_prevState: unknown, data: SkillCategoryInput) {
   await requireAuth();
 
-  const parsed = parseCategoryFormData(formData);
+  const parsed = skillCategorySchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
@@ -114,11 +110,11 @@ export async function createSkillCategory(_prevState: unknown, formData: FormDat
 export async function updateSkillCategory(
   id: string,
   _prevState: unknown,
-  formData: FormData
+  data: SkillCategoryInput
 ) {
   await requireAuth();
 
-  const parsed = parseCategoryFormData(formData);
+  const parsed = skillCategorySchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
@@ -153,21 +149,14 @@ export async function deleteSkillCategory(id: string) {
   revalidatePath("/admin/skills");
 }
 
-function parseItemFormData(formData: FormData) {
-  return skillItemSchema.safeParse({
-    name: formData.get("name"),
-    iconUrl: formData.get("iconUrl"),
-  });
-}
-
 export async function createSkillItem(
   categoryId: string,
   _prevState: unknown,
-  formData: FormData
+  data: SkillItemInput
 ) {
   await requireAuth();
 
-  const parsed = parseItemFormData(formData);
+  const parsed = skillItemSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
@@ -194,11 +183,11 @@ export async function updateSkillItem(
   categoryId: string,
   id: string,
   _prevState: unknown,
-  formData: FormData
+  data: SkillItemInput
 ) {
   await requireAuth();
 
-  const parsed = parseItemFormData(formData);
+  const parsed = skillItemSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }

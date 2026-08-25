@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { pageMetadataSchema } from "@/lib/schemas/metadata-schema";
+import { pageMetadataSchema, type PageMetadataInput } from "@/lib/schemas/metadata-schema";
 
 const PAGE_PATHS: Record<string, string> = {
   home: "/",
@@ -18,15 +18,12 @@ const PAGE_PATHS: Record<string, string> = {
 export async function updatePageMetadata(
   pageKey: string,
   _prevState: unknown,
-  formData: FormData
+  data: PageMetadataInput
 ) {
   const session = await auth();
   if (!session) redirect("/admin/login");
 
-  const parsed = pageMetadataSchema.safeParse({
-    title: formData.get("title"),
-    description: formData.get("description"),
-  });
+  const parsed = pageMetadataSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }

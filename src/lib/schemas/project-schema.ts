@@ -19,3 +19,5 @@ export const portfolioSectionSchema = z.object({
   headingLevel: z.coerce.number().int().min(1).max(6).optional(),
   perPage: z.coerce.number().int().min(1),
 });
+
+export type PortfolioSectionInput = z.infer<typeof portfolioSectionSchema>;

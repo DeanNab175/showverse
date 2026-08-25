@@ -11,6 +11,10 @@ import {
   experienceSchema,
   hobbySchema,
   parseParagraphsBodyJson,
+  type AboutIntroSectionInput,
+  type AboutHireBannerSectionInput,
+  type ExperienceInput,
+  type HobbyInput,
 } from "@/lib/schemas/about-schema";
 import {
   entryAnimationsArraySchema,
@@ -23,43 +27,30 @@ async function requireAuth() {
   if (!session) redirect("/admin/login");
 }
 
-export async function updateAboutIntroSection(_prevState: unknown, formData: FormData) {
+export interface UpdateAboutIntroSectionInput extends AboutIntroSectionInput {
+  paragraphsBodyJson: string;
+  entryAnimationsJson: string;
+  scrollAnimationsJson: string;
+}
+
+export async function updateAboutIntroSection(
+  _prevState: unknown,
+  data: UpdateAboutIntroSectionInput
+) {
   await requireAuth();
 
-  const parsed = aboutIntroSectionSchema.safeParse({
-    wrapperClass: formData.get("wrapperClass"),
-    sectionClass: formData.get("sectionClass"),
-    contentWrapperClass: formData.get("contentWrapperClass"),
-    headingText: formData.get("headingText"),
-    headingLevel: formData.get("headingLevel"),
-    headingClass: formData.get("headingClass"),
-    paragraphsClass: formData.get("paragraphsClass"),
-    experiencesWrapperClass: formData.get("experiencesWrapperClass"),
-    hobbyHeadingText: formData.get("hobbyHeadingText"),
-    hobbyHeadingLevel: formData.get("hobbyHeadingLevel"),
-    hobbyHeadingClass: formData.get("hobbyHeadingClass"),
-    ctaLabel: formData.get("ctaLabel"),
-    ctaVariant: formData.get("ctaVariant"),
-    ctaIconClass: formData.get("ctaIconClass"),
-    ctaWrapperClass: formData.get("ctaWrapperClass"),
-    imageWrapperId: formData.get("imageWrapperId"),
-    imageWrapperClass: formData.get("imageWrapperClass"),
-    isIllustration: formData.get("isIllustration") === "on",
-    illustrationHtml: formData.get("illustrationHtml"),
-    illustrationClass: formData.get("illustrationClass"),
-    imagePath: formData.get("imagePath"),
-  });
+  const parsed = aboutIntroSectionSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
 
-  const paragraphsBody = parseParagraphsBodyJson(formData.get("paragraphsBodyJson"));
+  const paragraphsBody = parseParagraphsBodyJson(data.paragraphsBodyJson);
   if (!paragraphsBody.success) {
     return { error: `Paragraphs: ${paragraphsBody.error}` };
   }
 
   const entryAnimations = parseAnimationsJson(
-    formData.get("entryAnimationsJson"),
+    data.entryAnimationsJson,
     entryAnimationsArraySchema
   );
   if (!entryAnimations.success) {
@@ -67,7 +58,7 @@ export async function updateAboutIntroSection(_prevState: unknown, formData: For
   }
 
   const scrollAnimations = parseAnimationsJson(
-    formData.get("scrollAnimationsJson"),
+    data.scrollAnimationsJson,
     scrollAnimationsArraySchema
   );
   if (!scrollAnimations.success) {
@@ -126,33 +117,30 @@ export async function updateAboutIntroSection(_prevState: unknown, formData: For
   redirect("/admin/about");
 }
 
-export async function updateAboutHireBannerSection(_prevState: unknown, formData: FormData) {
+export interface UpdateAboutHireBannerSectionInput extends AboutHireBannerSectionInput {
+  paragraphsBodyJson: string;
+  entryAnimationsJson: string;
+  scrollAnimationsJson: string;
+}
+
+export async function updateAboutHireBannerSection(
+  _prevState: unknown,
+  data: UpdateAboutHireBannerSectionInput
+) {
   await requireAuth();
 
-  const parsed = aboutHireBannerSectionSchema.safeParse({
-    wrapperClass: formData.get("wrapperClass"),
-    sectionClass: formData.get("sectionClass"),
-    contentWrapperClass: formData.get("contentWrapperClass"),
-    headingText: formData.get("headingText"),
-    headingLevel: formData.get("headingLevel"),
-    headingClass: formData.get("headingClass"),
-    paragraphsClass: formData.get("paragraphsClass"),
-    ctaLabel: formData.get("ctaLabel"),
-    ctaVariant: formData.get("ctaVariant"),
-    ctaWrapperClass: formData.get("ctaWrapperClass"),
-    ctaColumnClass: formData.get("ctaColumnClass"),
-  });
+  const parsed = aboutHireBannerSectionSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
 
-  const paragraphsBody = parseParagraphsBodyJson(formData.get("paragraphsBodyJson"));
+  const paragraphsBody = parseParagraphsBodyJson(data.paragraphsBodyJson);
   if (!paragraphsBody.success) {
     return { error: `Paragraphs: ${paragraphsBody.error}` };
   }
 
   const entryAnimations = parseAnimationsJson(
-    formData.get("entryAnimationsJson"),
+    data.entryAnimationsJson,
     entryAnimationsArraySchema
   );
   if (!entryAnimations.success) {
@@ -160,7 +148,7 @@ export async function updateAboutHireBannerSection(_prevState: unknown, formData
   }
 
   const scrollAnimations = parseAnimationsJson(
-    formData.get("scrollAnimationsJson"),
+    data.scrollAnimationsJson,
     scrollAnimationsArraySchema
   );
   if (!scrollAnimations.success) {
@@ -209,17 +197,10 @@ export async function updateAboutHireBannerSection(_prevState: unknown, formData
   redirect("/admin/about/hire-banner");
 }
 
-function parseExperienceFormData(formData: FormData) {
-  return experienceSchema.safeParse({
-    total: formData.get("total"),
-    description: formData.get("description"),
-  });
-}
-
-export async function createExperience(_prevState: unknown, formData: FormData) {
+export async function createExperience(_prevState: unknown, data: ExperienceInput) {
   await requireAuth();
 
-  const parsed = parseExperienceFormData(formData);
+  const parsed = experienceSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
@@ -242,10 +223,10 @@ export async function createExperience(_prevState: unknown, formData: FormData) 
   redirect("/admin/about");
 }
 
-export async function updateExperience(id: string, _prevState: unknown, formData: FormData) {
+export async function updateExperience(id: string, _prevState: unknown, data: ExperienceInput) {
   await requireAuth();
 
-  const parsed = parseExperienceFormData(formData);
+  const parsed = experienceSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
@@ -266,17 +247,10 @@ export async function deleteExperience(id: string) {
   revalidatePath("/admin/about");
 }
 
-function parseHobbyFormData(formData: FormData) {
-  return hobbySchema.safeParse({
-    label: formData.get("label"),
-    iconClass: formData.get("iconClass"),
-  });
-}
-
-export async function createHobby(_prevState: unknown, formData: FormData) {
+export async function createHobby(_prevState: unknown, data: HobbyInput) {
   await requireAuth();
 
-  const parsed = parseHobbyFormData(formData);
+  const parsed = hobbySchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
@@ -299,10 +273,10 @@ export async function createHobby(_prevState: unknown, formData: FormData) {
   redirect("/admin/about");
 }
 
-export async function updateHobby(id: string, _prevState: unknown, formData: FormData) {
+export async function updateHobby(id: string, _prevState: unknown, data: HobbyInput) {
   await requireAuth();
 
-  const parsed = parseHobbyFormData(formData);
+  const parsed = hobbySchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
