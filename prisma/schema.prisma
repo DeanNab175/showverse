@@ -35,6 +35,16 @@ model SocialMediaLink {
 model SiteSettings {
   id           String  @id @default("singleton")
   contactEmail String?
+
+  // Theme colour overrides. Null means "use the default from globals.css" -
+  // nothing is injected, so the CSS fallback applies. Values are validated
+  // against CSS_COLOR_PATTERN (src/lib/theme-settings.ts) before they ever
+  // reach the injected <style> block.
+  primaryColor      String?
+  secondaryColor    String?
+  surfaceLightColor String?
+  pageDarkColor     String?
+  surfaceDarkColor  String?
 }
 
 model PageMetadata {

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { M_PLUS_Rounded_1c } from "next/font/google";
 
 import { Providers } from "@/components/providers";
+import { buildThemeStyle, getSiteSettings } from "@/lib/theme-settings";
 
 const mPlusRounded = M_PLUS_Rounded_1c({
   variable: "--font-m-plus-rounded",
@@ -25,9 +26,11 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<RootLayoutProps>) {
+  const themeStyle = buildThemeStyle(await getSiteSettings());
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -44,6 +47,9 @@ export default function RootLayout({
             `,
           }}
         />
+        {themeStyle && (
+          <style dangerouslySetInnerHTML={{ __html: themeStyle }} />
+        )}
       </head>
       <body
         className={`${mPlusRounded.variable} antialiased overflow-x-hidden`}

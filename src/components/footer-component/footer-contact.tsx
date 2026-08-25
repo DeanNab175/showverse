@@ -1,9 +1,7 @@
-import { prisma } from "@/lib/prisma";
+import { getSiteSettings } from "@/lib/theme-settings";
 
 async function FooterContact() {
-  const settings = await prisma.siteSettings.findUnique({
-    where: { id: "singleton" },
-  });
+  const settings = await getSiteSettings();
 
   if (!settings?.contactEmail) return null;
 

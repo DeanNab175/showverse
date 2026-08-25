@@ -25,7 +25,13 @@
   /* --clr-accent-1: #ffeb3b; */
   /* --clr-accent-1: #ff5722; */
   /* --clr-accent-1: #607d8b; */
-  --clr-accent-1: oklch(0.8834 0.1636 125.02);
+  /*
+  The --cms-* variables below are set only by the <style> block the root layout
+  injects from SiteSettings (see src/lib/theme-settings.ts). When a colour has
+  not been customised in /admin/settings nothing is injected and each var()
+  falls back to the default beside it, so the palette here stays authoritative.
+  */
+  --clr-accent-1: var(--cms-primary, oklch(0.8834 0.1636 125.02));
   --clr-accent-2: oklch(0.4366 0.0183 170.25);
   --clr-accent-3: oklch(0.97 0.0082 121.63);
 
@@ -44,8 +50,9 @@
   --clr-youtube: oklch(0.628 0.2577 29.23);
   --clr-github: oklch(0.2781 0.0117 248.25);
 
-  --clr-accent-1-light: hsl(79deg 81% 80%);
-  --clr-accent-1-dark: hsl(82deg 73% 44%);
+  /* Derived from the primary when it is customised, so navbar hover keeps up. */
+  --clr-accent-1-light: var(--cms-primary-light, hsl(79deg 81% 80%));
+  --clr-accent-1-dark: var(--cms-primary-dark, hsl(82deg 73% 44%));
 
   --clr-accent-2-light: hsl(155deg 7% 50%);
   --clr-accent-2-dark: hsl(163deg 6% 22%);
@@ -54,7 +61,9 @@
   --clr-primary-light: var(--clr-accent-1-light);
   --clr-primary-dark: var(--clr-accent-1-dark);
 
-  --clr-secondary: var(--clr-accent-2);
+  /* Overrides --clr-secondary only, never --clr-accent-2 - the latter also
+     feeds --clr-body-txt, so retinting it would recolour all body text. */
+  --clr-secondary: var(--cms-secondary, var(--clr-accent-2));
   --clr-secondary-light: var(--clr-accent-2-light);
   --clr-secondary-dark: var(--clr-accent-2-dark);
 
@@ -80,7 +89,7 @@
 .light {
   --clr-body-txt: var(--clr-body);
   --clr-page-bg: var(--clr-white);
-  --clr-surface-bg: var(--clr-accent-3);
+  --clr-surface-bg: var(--cms-surface-light, var(--clr-accent-3));
   --clr-button-txt: var(--clr-dark);
   --clr-button-primary-txt: var(--clr-dark);
   --clr-button-secondary-txt: var(--clr-white);
@@ -133,8 +142,10 @@
 
 .dark {
   --clr-body-txt: var(--clr-white);
-  --clr-page-bg: var(--clr-dark-2);
-  --clr-surface-bg: var(--clr-dark);
+  /* Override the per-mode token, not --clr-dark-2/--clr-dark themselves: those
+     also supply button text, the active nav icon, and illustration strokes. */
+  --clr-page-bg: var(--cms-page-dark, var(--clr-dark-2));
+  --clr-surface-bg: var(--cms-surface-dark, var(--clr-dark));
   --clr-button-txt: var(--clr-dark);
   --clr-button-primary-txt: var(--clr-dark);
   --clr-button-secondary-txt: var(--clr-white);
