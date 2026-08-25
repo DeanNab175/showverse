@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
 import DeleteButton from "@/components/admin/delete-button";
+import Heading from "@/components/typography/heading";
+import { Button } from "@/components/ui/button";
 
 import { updateSkillCategory, deleteSkillItem } from "../actions";
 import CategoryForm from "../category-form";
@@ -27,7 +29,9 @@ async function EditSkillCategoryPage({ params }: EditSkillCategoryPageProps) {
       <Link href="/admin/skills" className="text-sm hover:text-primary">
         &larr; Back to skills
       </Link>
-      <h1 className="text-lg font-medium mt-2 mb-4">Edit category</h1>
+      <Heading level={1} className="text-2xl font-extrabold text-primary mt-2 mb-4">
+        Edit category
+      </Heading>
       <div className="mb-8">
         <CategoryForm
           action={boundUpdateAction}
@@ -37,13 +41,10 @@ async function EditSkillCategoryPage({ params }: EditSkillCategoryPageProps) {
       </div>
 
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-medium">Items</h2>
-        <Link
-          href={`/admin/skills/${id}/items/new`}
-          className="rounded-lg bg-primary text-button-primary-txt px-4 py-2 text-sm font-medium"
-        >
-          Add item
-        </Link>
+        <Heading level={2} className="text-xl font-medium">Items</Heading>
+        <Button asChild size="sm">
+          <Link href={`/admin/skills/${id}/items/new`}>Add item</Link>
+        </Button>
       </div>
 
       <div className="flex flex-col gap-2">

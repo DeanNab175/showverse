@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { prisma } from "@/lib/prisma";
 import DeleteButton from "@/components/admin/delete-button";
+import Heading from "@/components/typography/heading";
+import { Button } from "@/components/ui/button";
 
 import { deleteSocialLink } from "./actions";
 
@@ -13,13 +15,12 @@ async function SocialLinksPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-lg font-medium">Social links</h1>
-        <Link
-          href="/admin/social-links/new"
-          className="rounded-lg bg-primary text-button-primary-txt px-4 py-2 text-sm font-medium"
-        >
-          Add link
-        </Link>
+        <Heading level={1} className="text-2xl font-extrabold text-primary">
+          Social links
+        </Heading>
+        <Button asChild size="sm">
+          <Link href="/admin/social-links/new">Add link</Link>
+        </Button>
       </div>
 
       <div className="flex flex-col gap-2">

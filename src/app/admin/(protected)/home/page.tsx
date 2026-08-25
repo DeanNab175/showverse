@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import Heading from "@/components/typography/heading";
 
 import SectionForm from "./section-form";
 
@@ -10,7 +11,9 @@ async function HomePage() {
 
   return (
     <div>
-      <h1 className="text-lg font-medium mb-4">Home</h1>
+      <Heading level={1} className="text-2xl font-extrabold text-primary mb-4">
+        Home
+      </Heading>
       <SectionForm
         defaultValues={{
           wrapperClass: section?.wrapperClass ?? "",

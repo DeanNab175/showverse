@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+
 interface DeleteButtonProps {
   action: () => Promise<void>;
   confirmMessage: string;
@@ -13,9 +15,9 @@ function DeleteButton({ action, confirmMessage }: DeleteButtonProps) {
         if (!confirm(confirmMessage)) e.preventDefault();
       }}
     >
-      <button type="submit" className="text-sm text-destructive hover:underline">
+      <Button type="submit" variant="ghost" size="sm" className="text-destructive hover:text-destructive">
         Delete
-      </button>
+      </Button>
     </form>
   );
 }

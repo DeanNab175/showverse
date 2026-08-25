@@ -3,6 +3,8 @@ import type { Experience, Hobby } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 import DeleteButton from "@/components/admin/delete-button";
+import Heading from "@/components/typography/heading";
+import { Button } from "@/components/ui/button";
 
 import { deleteExperience, deleteHobby } from "./actions";
 import SectionForm from "./section-form";
@@ -19,7 +21,9 @@ async function AboutPage() {
 
   return (
     <div>
-      <h1 className="text-lg font-medium mb-4">About</h1>
+      <Heading level={1} className="text-2xl font-extrabold text-primary mb-4">
+        About
+      </Heading>
 
       <SectionForm
         defaultValues={{
@@ -51,13 +55,10 @@ async function AboutPage() {
       />
 
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-medium">Experiences</h2>
-        <Link
-          href="/admin/about/experiences/new"
-          className="rounded-lg bg-primary text-button-primary-txt px-4 py-2 text-sm font-medium"
-        >
-          Add experience
-        </Link>
+        <Heading level={2} className="text-xl font-medium">Experiences</Heading>
+        <Button asChild size="sm">
+          <Link href="/admin/about/experiences/new">Add experience</Link>
+        </Button>
       </div>
 
       <div className="flex flex-col gap-2 mb-8">
@@ -90,13 +91,10 @@ async function AboutPage() {
       </div>
 
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-medium">Hobbies</h2>
-        <Link
-          href="/admin/about/hobbies/new"
-          className="rounded-lg bg-primary text-button-primary-txt px-4 py-2 text-sm font-medium"
-        >
-          Add hobby
-        </Link>
+        <Heading level={2} className="text-xl font-medium">Hobbies</Heading>
+        <Button asChild size="sm">
+          <Link href="/admin/about/hobbies/new">Add hobby</Link>
+        </Button>
       </div>
 
       <div className="flex flex-col gap-2">

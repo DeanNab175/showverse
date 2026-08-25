@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { prisma } from "@/lib/prisma";
+import Heading from "@/components/typography/heading";
 
 const PAGE_ORDER = ["home", "about", "portfolio", "skills", "contact"];
 
@@ -10,7 +11,9 @@ async function MetadataPage() {
 
   return (
     <div>
-      <h1 className="text-lg font-medium mb-4">Page metadata</h1>
+      <Heading level={1} className="text-2xl font-extrabold text-primary mb-4">
+        Page metadata
+      </Heading>
       <div className="flex flex-col gap-2">
         {PAGE_ORDER.map((pageKey) => {
           const row = byKey.get(pageKey);
