@@ -24,11 +24,19 @@ export const CSS_COLOR_PATTERN =
  * `fallbackHex` is a hex approximation of the current globals.css default. It
  * is used *only* to seed the native colour swatch's appearance when a field is
  * empty - it is never written to the database and never injected.
+ *
+ * `group` drives the panels in the admin form. `indent` marks a field as an
+ * override of the one above it.
  */
+export const THEME_COLOR_GROUPS = ["Brand", "Text", "Button text"] as const;
+
+export type ThemeColorGroup = (typeof THEME_COLOR_GROUPS)[number];
+
 export const THEME_COLOR_FIELDS = [
   {
     key: "primaryColor",
     cssVar: "--cms-primary",
+    group: "Brand",
     label: "Primary / brand colour",
     description:
       "Buttons, headings, active nav indicator, focus rings, and brand-coloured illustration parts.",
@@ -37,6 +45,7 @@ export const THEME_COLOR_FIELDS = [
   {
     key: "secondaryColor",
     cssVar: "--cms-secondary",
+    group: "Brand",
     label: "Secondary colour",
     description:
       "Secondary buttons and the hire-banner gradient. Body text is unaffected.",
@@ -45,6 +54,7 @@ export const THEME_COLOR_FIELDS = [
   {
     key: "surfaceLightColor",
     cssVar: "--cms-surface-light",
+    group: "Brand",
     label: "Surface tint (light mode)",
     description: "Cards, panels, and form inputs in light mode.",
     fallbackHex: "#f4f6f0",
@@ -52,6 +62,7 @@ export const THEME_COLOR_FIELDS = [
   {
     key: "pageDarkColor",
     cssVar: "--cms-page-dark",
+    group: "Brand",
     label: "Page background (dark mode)",
     description: "The page backdrop in dark mode.",
     fallbackHex: "#131615",
@@ -59,9 +70,54 @@ export const THEME_COLOR_FIELDS = [
   {
     key: "surfaceDarkColor",
     cssVar: "--cms-surface-dark",
+    group: "Brand",
     label: "Surface background (dark mode)",
     description: "Cards, panels, and form inputs in dark mode.",
     fallbackHex: "#1e2422",
+  },
+  {
+    key: "bodyTextLightColor",
+    cssVar: "--cms-body-txt-light",
+    group: "Text",
+    label: "Body text (light mode)",
+    description:
+      "All body copy on the public site in light mode. Outline and ghost buttons follow this too.",
+    fallbackHex: "#485550",
+  },
+  {
+    key: "bodyTextDarkColor",
+    cssVar: "--cms-body-txt-dark",
+    group: "Text",
+    label: "Body text (dark mode)",
+    description: "All body copy on the public site in dark mode.",
+    fallbackHex: "#ffffff",
+  },
+  {
+    key: "buttonTextColor",
+    cssVar: "--cms-button-txt",
+    group: "Button text",
+    label: "Button text (all buttons)",
+    description:
+      "Text on filled buttons. Link buttons use the primary colour, and destructive buttons stay white.",
+    fallbackHex: "#1e2422",
+  },
+  {
+    key: "buttonPrimaryTextColor",
+    cssVar: "--cms-button-primary-txt",
+    group: "Button text",
+    label: "Primary buttons",
+    description: "Overrides the colour above for primary buttons only.",
+    fallbackHex: "#1e2422",
+    indent: true,
+  },
+  {
+    key: "buttonSecondaryTextColor",
+    cssVar: "--cms-button-secondary-txt",
+    group: "Button text",
+    label: "Secondary buttons",
+    description: "Overrides the colour above for secondary buttons only.",
+    fallbackHex: "#ffffff",
+    indent: true,
   },
 ] as const;
 

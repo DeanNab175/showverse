@@ -22,7 +22,10 @@ export default async function SiteLayout({ children }: SiteLayoutProps) {
   return (
     <>
       <div className="main-content-shape bg-surface-bg fixed w-full h-full -z-[1]"></div>
-      <main className="container mx-auto px-3 flex items-center min-h-dvh">
+      {/* site-scope confines the CMS-editable text colours to the public site so
+          they can never make the admin unreadable; text-body-txt is required
+          here so this element resolves the scoped value and children inherit it. */}
+      <main className="site-scope text-body-txt container mx-auto px-3 flex items-center min-h-dvh">
         <div className="grid gap-4 w-full h-[85vh] tall:h-[1040px] grid-rows-[1fr_auto] lg:grid-rows-none lg:grid-cols-9 xl:grid-cols-12">
           <div className="lg:col-start-1 lg:col-end-2">
             <NavbarComponent links={navbarLinks} />

@@ -45,6 +45,14 @@ model SiteSettings {
   surfaceLightColor String?
   pageDarkColor     String?
   surfaceDarkColor  String?
+
+  // Text colours. These are scoped to the public site (.site-scope in
+  // globals.css) so they cannot affect the admin's own readability.
+  bodyTextLightColor      String?
+  bodyTextDarkColor       String?
+  buttonTextColor         String?
+  buttonPrimaryTextColor  String?
+  buttonSecondaryTextColor String?
 }
 
 model PageMetadata {
